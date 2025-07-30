@@ -1,20 +1,32 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+const mysql = require('mysql2');
+const fs = require('fs');
+const path = require('path');
+const sqlDir = path.join(__dirname, '../../Database'); 
 
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 5432, // Default PostgreSQL port
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'Aditi@1234',
+  database: 'ecommerce_db',
+  multipleStatements: true 
 });
+connection.connect();
 
-pool.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the PostgreSQL database:', err);
-    return;
+const files = [
+  'user.sql', 'item.sql', 'orderHistory.sql', 'soldHistory.sql',
+  'wishlist.sql', 'chatService.sql', 'transaction.sql', 'queries.sql',
+];
+
+files.forEach(file => {
+  const filePath = path.join(sqlDir, file);
+  if(fs.existsSync(filePath)) {
+    const query = fs.readFileSync(filePath, 'utf8');
+    connection.query(query, (err) => {
+      if (err) throw err;
+      console.log(`${file} executed successfully`);
+    });
+  } 
+  else {
+    console.warn(`Missing file: ${filePath}`);
   }
-  console.log('Connected to the PostgreSQL database');
 });
-
-module.exports = pool;

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10; 
 
-const plainTextPassword = 'I am chakraborty'; 
+const plainTextPassword = 'Aditi Nageshwar'; 
 
 bcrypt.hash(plainTextPassword, saltRounds, (err, hash) => {
     if (err) {

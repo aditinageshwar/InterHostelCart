@@ -1,8 +1,12 @@
-   drop table item;
-   
+   SET FOREIGN_KEY_CHECKS = 0;
+   DROP TABLE IF EXISTS item;
+   SET FOREIGN_KEY_CHECKS = 1;
+
+   SET sql_mode = '';
+
    CREATE TABLE item (
-    itemNO SERIAL,
-    sellerID INT,
+    itemNO INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    sellerId INT,
     itemName VARCHAR(40) NOT NULL,
     itemPrice INT NOT NULL,
     itemDescription VARCHAR(255),
@@ -13,12 +17,11 @@
     itemPhotoURL VARCHAR(500),
     gender VARCHAR(10),
     
-    CONSTRAINT fk_seller FOREIGN KEY (sellerID) REFERENCES userTable(userID),
-    CONSTRAINT pk_item PRIMARY KEY (itemNO)
+    FOREIGN KEY (sellerId) REFERENCES usertable(userID)
 );
 
 
-INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
+INSERT INTO item (sellerId,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
 	 (1,'TP-Link Router 2.4GHz',500,'6 months old, in very good condition, white in color','Router,Electronics','2024-03-04',false,1,'https://imgs.search.brave.com/XR7yynlmH6a-KNQbaKvSAJTKcIJ6hlZbmD9HXEubayA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFEeWEwbDJ4d0wu/anBn','he'),
 	 (2,'Havells Air Cooler',6000,'6 months old, in very good condition, white in color','Cooler,Electronics','2024-02-03',false,9,'https://imgs.search.brave.com/lX6X_TiV-7QhIxUZBoOwF6lpUb40O9JxPTpfssiO90Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF1c0FDM1ZCREwu/anBn','he'),
 	 (3,'Smartphone',5000,'Brand new smartphone with latest features','Electronics','2003-03-04',false,105,'https://imgs.search.brave.com/wgThZOJSAJxAHjMHsNMIGjlGm_qc3frt7Eh2S4oQHGw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzUyLzQ1LzMy/LzM2MF9GXzUyNDUz/MjkzX3FHQ1JGZGY2/bkVrQ0xqQnVSSUhR/SVFNT09hWW1nTnBO/LmpwZw','he'),
@@ -32,7 +35,7 @@ INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDa
 
 
 
-INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
+INSERT INTO item (sellerId,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
 	 (1,'Leather Wallet',135,'Brown leather wallet with multiple card slots','accessories','2024-04-05',false,7,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fgargantua-black-5200x3250-9621.jpg?alt=media&token=66acfdf3-bbcd-4034-9566-43ab93aec27d','he'),
 	 (2,'Wireless Mouse',315,'Ergonomic design, compatible with all devices','electronics','2024-03-05',false,2,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fgargantua-black-5200x3250-9621.jpg?alt=media&token=66acfdf3-bbcd-4034-9566-43ab93aec27d','he'),
 	 (3,'Floral Dress',449,'Elegant floral pattern dress suitable for parties','clothing dress','2024-06-06',false,10,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fgargantua-black-5200x3250-9621.jpg?alt=media&token=66acfdf3-bbcd-4034-9566-43ab93aec27d','he'),
@@ -46,7 +49,7 @@ INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDa
 
 
 	
-INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
+INSERT INTO item (sellerId,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
 	 (8,'TP-Link Router 2.4GHz',500,'6 months old, in very good condition, white in color','Router,Electronics','2024-03-04',false,1,'https://imgs.search.brave.com/XR7yynlmH6a-KNQbaKvSAJTKcIJ6hlZbmD9HXEubayA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NjFEeWEwbDJ4d0wu/anBn','he'),
 	 (2,'Havells Air Cooler',6000,'6 months old, in very good condition, white in color','Cooler,Electronics','2024-02-03',false,9,'https://imgs.search.brave.com/lX6X_TiV-7QhIxUZBoOwF6lpUb40O9JxPTpfssiO90Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NzF1c0FDM1ZCREwu/anBn','he'),
 	 (3,'Smartphone',5000,'Brand new smartphone with latest features','Electronics','2003-03-04',false,105,'https://imgs.search.brave.com/wgThZOJSAJxAHjMHsNMIGjlGm_qc3frt7Eh2S4oQHGw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzUyLzQ1LzMy/LzM2MF9GXzUyNDUz/MjkzX3FHQ1JGZGY2/bkVrQ0xqQnVSSUhR/SVFNT09hWW1nTnBO/LmpwZw','he'),
@@ -59,13 +62,13 @@ INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDa
 	 (1,'this is for test',500,'testing','test','2024-09-24',false,0,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fvenom-black-symbiote-desktop-wallpaper-4k.jpg?alt=media&token=d261ab75-d62a-4b0c-bad0-ef1c17d97afb','he');
 
 	
-INSERT INTO item (sellerID,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
+INSERT INTO item (sellerId,itemName,itemPrice,itemDescription,itemTags,listingDate,reportflag,itemVisit,itemPhotoURL,gender) VALUES
 	 (1,'gghahaha',695654,' jhdbah bdabd jabc a','test','2024-09-24',false,0,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Ftorii-gate-japanese-5120x7244-15297.jpg?alt=media&token=83c59cb8-31fa-4b3c-bd41-0cfe800b287c','he'),
 	 (1,'testa cokaskcascj aclaksa',454,'dadawdadszdsdca','adad','2024-09-24',false,0,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fdeadpool-vs-wolverine-yellow-background-desktop-wallpaper-4k.jpg?alt=media&token=36ceee2d-7051-421a-9b29-16ac2bb191f2','he'),
 	 (1,'pen',10,'pen hahaha','pen','2024-09-24',false,0,'https://firebasestorage.googleapis.com/v0/b/interhostel-cart.appspot.com/o/images%2Fretro-spike-spiegel-cityscape-cowboy-bebop-desktop-wallpaper-4k.jpg?alt=media&token=5db8a8db-55e6-4fcc-aadd-bd6d2e27ac5b','he');
 
 
-INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
+INSERT INTO item (sellerId, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
 (1, 'Laptop', 20000, '8 months old, black color, excellent condition', 'Electronics', '2024-03-04', false, 1, 'https://cdn.thewirecutter.com/wp-content/media/2023/06/bestlaptops-2048px-9765.jpg', 'he'),
 (2, 'Smartphone', 5000, '6 months old, silver color, very good condition', 'Electronics', '2024-04-03', false, 2, 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQjKGU9iHKHgexdIrZ7-oeBH5gkher22P8xNbx_7bfleTnQWfX30x_O8RfiiuM8kAJeTaEzebqN7kVdj7Jmi6KGj9mTkOTrOS6cLDIoC1A', 'he'),
 (3, 'Headphone', 500, '4 months old, black color, lightly used, great condition', 'Electronics', '2024-03-04', false, 3, 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRkfSyCMWTYS1B6uRJeEbO6ZlWXZT9PCxcHZvcOPtNT88zqBm6DOvlYaITscUrZgz5BYWO3WJPWt0eUN0Hp9wxwIU9yJIvDOSHgyANM2G5_hp4HaRpdMcuJZQ', 'he'),
@@ -78,7 +81,7 @@ INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, list
 (10, 'USB Flash Drive', 200, '8 months old, blue color, ample storage, good condition', 'Electronics', '2024-03-05', false, 10, 'https://media.istockphoto.com/id/172295657/photo/flash-drive-on-white-background.jpg?s=612x612&w=0&k=20&c=WIEpilaLFDQrRF6TOB3DIMgHHRnDIHaDDSBtubYyUBs=', 'he');
 
 
-INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
+INSERT INTO item (sellerId, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
 (1, 'Notebook', 50, '3 months old, blue cover, lightly used', 'Stationary', '2024-04-01', false, 1, 'https://media.istockphoto.com/id/149402372/photo/notebook.jpg?s=612x612&w=0&k=20&c=aGoLZSVt9IXBiO_bsJqvP9pjiyVJ7cETmSZm5fKjdUI=', 'he'),
 (2, 'Calculator', 200, '6 months old, black color, excellent condition', 'Stationary', '2024-04-02', false, 2, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDNquvpQImBDI6m6j1ilOD8-bgjSny3-hJDg&s', 'he'),
 (3, 'Pen Set', 30, '2 months old, assorted colors, barely used', 'Stationary', '2024-04-03', false, 3, 'https://helloaugust.in/wp-content/uploads/2020/04/colour-gel-pen-set.jpg', 'he'),
@@ -90,13 +93,13 @@ INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, list
 (9, 'Geometry Set', 50, '5 months old, transparent color, no scratches', 'Stationary', '2024-04-09', false, 9, 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSIag-lvVWc4NNwANMPIzTI0gpmk7T9-JjzD6dR1Ppz3-Arobpy-zR3XRbQyvcYz8WhY2BsxvcwK96qgOI3MboUBFz89t501iok4NLq3HOfTEiTU5yN6rDhag', 'he'),
 (10, 'Sticky Notes', 20, '1 month old, yellow and pink, good adhesive', 'Stationary', '2024-04-10', false, 10, 'https://media.istockphoto.com/id/1494224375/photo/group-of-colorful-sticky-notes-on-white-paper-background.jpg?s=612x612&w=0&k=20&c=7pRezznvpU4TUtmEHPLJfkrWUEUwRfWJyCXpU9OWhJQ=', 'he');
 
-INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
+INSERT INTO item (sellerId, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
 (1, 'Bicycle', 3000, '10 months old, blue color, well-maintained, smooth ride', 'Vehicle', '2024-03-04', false, 1, 'https://justbuycycles.com/cdn/shop/products/T05507_1.png?v=1673182232', 'he'),
 (2, 'Electric Scooter', 15000, '8 months old, black color, excellent battery life, great condition', 'Vehicle', '2024-04-03', false, 2, 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTtXQVqm6_4ffo1WBW_U4GeQ1mB852r5Y_IuJ7ODlbXhEfuQj9BWh5r5r43Q4sUsdcDFyPdpEdCsnVAysg7pXit7vZWrG14sYiiPhDEw7P1uFcgKxfHMIUp', 'he'),
 (5, 'Motorcycle', 25000, '15 months old, silver color, fully serviced, reliable condition', 'Vehicle', '2024-02-15', false, 5, 'https://imgd.aeplcdn.com/370x208/n/cw/ec/103183/raider-125-right-side-view-20.png?isig=0&q=80', 'he'),
 (6, 'Helmet', 500, '3 months old, black color, like new, excellent condition', 'Vehicle', '2024-03-01', false, 6, 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR36uE0wbRvJymrqKMSH4L0PCf6EJjEH-BIR0MTKiYGXq1RfIfm0kMKBrml0joiJMiSO4vlis7HwOHV6r4wzYxVN4awCSAFq81EiT7dwFSnHbi3xxNT2XUv', 'he'),
 (9, 'Electric Cycle', 20000, '9 months old, gray color, powerful battery, excellent condition', 'Vehicle', '2024-03-03', false, 9, 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRss89tXI3mjXL4rRqy06UlZb6T6autb5QsCpNrHMO4HLMmdGt8-EYDL_eCVg4_HMKeZyAGs3lNlXcbOnJO30ECqf46UdJLaw6978_vcJ3NRzPqIcyPVLYT', 'he');
-INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
+INSERT INTO item (sellerId, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
 (1, 'Tennis Racket', 1500, '6 months old, red color, good condition, lightly used with no damage', 'Sports', '2024-03-04', false, 1, 'https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932067_640.jpg', 'he'),
 (2, 'Badminton Racket', 800, '8 months old, green color, very good condition, used but still in excellent shape', 'Sports', '2024-04-03', false, 2, 'https://media.istockphoto.com/id/1761333789/photo/badminton-shuttlecocks-and-racket-placed-in-the-corner-of-a-synthetic-field.jpg?s=612x612&w=0&k=20&c=3rr4BZqe1rDWsCe6LF_YPCXZe6Um5jizc6d6n96U1Q4=', 'he'),
 (3, 'Football', 1200, '1 year old, white and black color, good condition, some wear but still very functional', 'Sports', '2024-03-04', false, 3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXo8tXXCbU9nsV2Qn54ItpMWxaC5FzR2FaRA&s', 'he'),
@@ -107,7 +110,7 @@ INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, list
 (8, 'Dumbbells (Set)', 1200, '5 months old, gray color, like new condition, lightly used for home workouts', 'Sports', '2024-02-20', false, 8, 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRJVAi_dbjB5Mcoqob-60aAiYQm_pAFLkfSfv-dPnXijrX-XoACY1TwTLNS4NMMe_D_Vzef67cP5I1E2TB1YO89FcC9zs4OydGKAPEqNQi8peMx1C9fHka4', 'he'),
 (9, 'Skipping Rope', 300, '3 months old, blue color, very good condition, lightly used, adjustable length', 'Sports', '2024-03-03', false, 9, 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcR4EciDTTOw4-fWdsrtcLoX2RfPKkkXVICrJ221-nwmXXk24rda6p8MMeb2_4dqktwLE59DihQqbFOiQgF2SOWCEkvhRyUrUz6G9uV7pp4HJC7vDBrstPloYA', 'he');
 
-INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
+INSERT INTO item (sellerId, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender) VALUES
 (1, 'Watch', 1500, '1 year old, black color, good condition, lightly used, minor scratches on the strap', 'Accessories', '2024-01-10', false, 1, 'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQ4x8gMA02nOgjgrvh4X0UxIzhT2aiWfAmHEmdwt4Gl1B2yul1-51ZqfunSA8Eici2lpfzfRNml7Ox2m3Nie0eDqM5a6MTi0EVCqLO0cbQ', 'he'),
 (2, 'Sunglasses', 800, '6 months old, brown color, great condition, no scratches, stylish frame', 'Accessories', '2024-03-15', false, 2, 'https://images.meesho.com/images/products/53696109/xg9u1_512.webp', 'he'),
 (3, 'Backpack', 1200, '8 months old, navy blue color, very good condition, no tears, spacious', 'Accessories', '2024-02-20', false, 3, 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSVe9bmqHic31EqagoG1MMhXt4SfXXNAHV1NqyCulR7G-qO-6Y3i2PAS26H_IyrH4VMPeW1Ln-cYfVY09Z36xZMJ0_MpU2s2guXhRx-wHSn_M88bCixhT6t', 'he'),
@@ -117,9 +120,5 @@ INSERT INTO item (sellerID, itemName, itemPrice, itemDescription, itemTags, list
 (8, 'Handbag', 1000, '5 months old, black color, great condition, stylish and spacious', 'Accessories', '2024-02-18', false, 8, 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ8SzlL4-mVXM2_9SiNbhl9CjqYZSJljDXmnjTZg9fXtSmOkZG4vmPlAYyKAwNxG1rNi0hNHTlDufxLJ9Edu_a7djAdx1k4u2Cza6_QoGvhLhYaYcBXCAvzFw', 'she'),
 (9, 'Gloves', 300, '7 months old, black color, very good condition, lightly used for winter', 'Accessories', '2024-03-10', false, 9, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRspEG59vgEM-iBRiOkN0w9z-A-cRndRJSNbQ&s', 'he'),
 (10, 'Keychain', 150, '2 months old, silver color, excellent condition, hardly used, stylish', 'Accessories', '2024-04-01', false, 10, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdOlWpuqDnLErhaPJABBrOuCZcvij7H5CRyQ&s', 'he');
-<<<<<<< HEAD
 
-=======
->>>>>>> 86f1bea (home page search product, footer animation, redirect to product from home page)
-	
-select * from item;
+SELECT * FROM item;
