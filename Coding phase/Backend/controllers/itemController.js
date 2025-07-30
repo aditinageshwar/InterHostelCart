@@ -1,20 +1,17 @@
 const Item = require('../models/itemModel');
 
 const itemController = {
-  getAllItems: (req, res) => {
-    
-    
-    Item.getAll((err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
+  getAllItems: async (req, res) => {
+    try {
+      const result = await Item.getAll();
       res.send(result);
-    });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
   },
 
-  createItem: (req, res) => {
-    
+  createItem: async (req, res) => {
     const {
       sellerID,
       itemName,
@@ -33,92 +30,80 @@ const itemController = {
     const itemVisit = 0;
     const itemData = [sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL];
 
-    Item.create(itemData, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
+    try {
+      const result = await Item.create(itemData);
       res.status(201).json({ message: 'Item added successfully', itemId: result.insertId });
-    });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
   },
 
-  getItemsByGenderAndSeller: (req, res) => {
-    
+  getItemsByGenderAndSeller: async (req, res) => {
     const { gender, id } = req.params;
-    Item.getByGenderAndSeller(gender, id, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
+    try {
+      const result = await Item.getByGenderAndSeller(gender, id);
       res.send(result);
-    });
-  },
-  getItemsByTag:(req,res)=>{
-    
-    const tag=req.params;
-    Item.getByTag(tag, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
-      
-      
-      
-      res.send(result);
-    });
-  },
-  getItemById:(req,res)=>{
-      const id=req.params;
-
-     // console.log("yes",id);
-      
-       Item.getById(id.id,(err,result)=>{
-        if(err){
-          console.error('Error executing query:', err);
-          return res.status(500).json({ error: err.message });
-        }
-        res.send(result);
-      })
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
   },
 
-  reportItem: (req, res) => {
+  getItemsByTag: async (req, res) => {
+    const tag = req.params;
+    try {
+      const result = await Item.getByTag(tag);
+      res.send(result);
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  getItemById: async (req, res) => {
+    const id = req.params;
+    try {
+      const result = await Item.getById(id.id);
+      res.send(result);
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  reportItem: async (req, res) => {
     const { itemId } = req.body;
-
-    Item.reportItem(itemId, (err, result) => {
-      if (err) {
-        console.error('Error reporting item:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    try {
+      const result = await Item.reportItem(itemId);
       res.status(200).json(result);
-    });
+    } catch (err) {
+      console.error('Error reporting item:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   },
-  removeItem:(req,res)=>{
-    const id=req.params;
-    
-    Item.removeById(id.id,(err,result)=>{
-      if(err){
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
-      res.status(201).json({ message: 'Item removed successfully'});
-    })
+
+  removeItem: async (req, res) => {
+    const id = req.params;
+    try {
+      await Item.removeById(id.id);
+      res.status(201).json({ message: 'Item removed successfully' });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
   },
-  getItemsByHostel:(req,res)=>{
-    
-    const tag=req.params;
-    
-    
-    Item.getByHostel(tag, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: err.message });
-      }
-      
-      
-      
+
+  getItemsByHostel: async (req, res) => {
+    const tag = req.params;
+    try {
+      const result = await Item.getByHostel(tag);
       res.send(result);
-    });
-  },
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
+  }
 };
 
 module.exports = itemController;

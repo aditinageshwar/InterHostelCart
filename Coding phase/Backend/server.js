@@ -17,7 +17,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // Replace with your frontend's origin
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST']
   }
 });
@@ -71,4 +71,4 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-module.exports = io; // Export io for use in other files
+module.exports = io; 

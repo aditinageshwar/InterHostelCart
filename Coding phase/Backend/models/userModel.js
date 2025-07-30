@@ -1,32 +1,77 @@
 const pool = require('../config/db');
 
 const User = {
-  create: (email,hostel,room,username,dob,phone,hash,dept,course, callback) => {
-    const sqlInsert = "INSERT INTO usertable (emailid,hostelno,roomno,username,userdob,userphoneno,userpassword,userdept,usercourse) VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9)";
-    pool.query(sqlInsert, [email,hostel,room,username,dob,phone,hash,dept,course], callback);
+  create: async (email, hostel, room, username, dob, phone, hash, dept, course) => {
+    const sqlInsert = `
+      INSERT INTO usertable (
+        emailid, hostelno, roomno, username, userdob,
+        userphoneno, userpassword, userdept, usercourse
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    try {
+      const [result] = await pool.query(sqlInsert, [email, hostel, room, username, dob, phone, hash, dept, course]);
+      return result;
+    } catch (err) {
+      console.error("Error in create:", err);
+      throw err;
+    }
   },
-  findByEmail: (email, callback) => {
-    const sqlSelect = "SELECT * FROM usertable WHERE emailid = $1";
-    pool.query(sqlSelect, [email], callback);
+
+  findByEmail: async (email) => {
+    const sqlSelect = "SELECT * FROM usertable WHERE emailid = ?";
+    try {
+      const [rows] = await pool.query(sqlSelect, [email]);
+      console.log("Query results in findByEmail:", rows);
+      return rows;
+    } catch (err) {
+      console.error("Error in findByEmail:", err);
+      throw err;
+    }
   },
-  findById: (userId, callback) => {
-    // console.log("hi",userId);
-    
-    const sqlSelect = "SELECT * FROM usertable WHERE userid = $1";
-    pool.query(sqlSelect, [userId], callback);
+
+  findById: async (userId) => {
+    const sqlSelect = "SELECT * FROM usertable WHERE userid = ?";
+    try {
+      const [rows] = await pool.query(sqlSelect, [userId]);
+      return rows;
+    } catch (err) {
+      console.error("Error in findById:", err);
+      throw err;
+    }
   },
-  updateMobileNumber: (userId, mobileNumber, callback) => {
-    const sqlUpdate = "UPDATE usertable SET userphoneno = $1 WHERE userid = $2";
-    pool.query(sqlUpdate, [mobileNumber, userId], callback);
+
+  updateMobileNumber: async (userId, mobileNumber) => {
+    const sqlUpdate = "UPDATE usertable SET userphoneno = ? WHERE userid = ?";
+    try {
+      const [result] = await pool.query(sqlUpdate, [mobileNumber, userId]);
+      return result;
+    } catch (err) {
+      console.error("Error in updateMobileNumber:", err);
+      throw err;
+    }
   },
-  updateProfileImage: (userId, image, callback) => {
-    const sqlUpdate = "UPDATE usertable SET profileImage = $1 WHERE userid = $2";
-    pool.query(sqlUpdate, [image, userId], callback);
+
+  updateProfileImage: async (userId, image) => {
+    const sqlUpdate = "UPDATE usertable SET profileImage = ? WHERE userid = ?";
+    try {
+      const [result] = await pool.query(sqlUpdate, [image, userId]);
+      return result;
+    } catch (err) {
+      console.error("Error in updateProfileImage:", err);
+      throw err;
+    }
   },
-  getAll: (callback) => {
+
+  getAll: async () => {
     const sqlSelect = "SELECT * FROM usertable";
-    pool.query(sqlSelect, callback);
-  },
+    try {
+      const [rows] = await pool.query(sqlSelect);
+      return rows;
+    } catch (err) {
+      console.error("Error in getAll:", err);
+      throw err;
+    }
+  }
 };
 
 module.exports = User;

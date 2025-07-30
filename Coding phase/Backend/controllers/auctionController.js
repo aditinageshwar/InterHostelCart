@@ -1,203 +1,137 @@
 const Auction = require("../models/auctionModel");
 const Order = require("../models/orderModel");
-const pool = require('../config/db');
 
 const auctionController = (io) => ({
-  createAuction: (req, res) => {
-    const { itemId, startingBid, endTime } = req.body;
-
-    Auction.createAuction(itemId, startingBid, endTime, (err, result) => {
-      if (err) {
-        console.error("Error creating auction:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-      res
-        .status(201)
-        .json({
-          message: "Auction created successfully",
-          auction: result.rows[0],
-        });
-    });
-  },
-
-  getAuctionById: (req, res) => {
-    const { auctionId } = req.params;
-
-    Auction.getAuctionById(auctionId, (err, result) => {
-      if (err) {
-        console.error("Error fetching auction:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-      res.json({ auction: result.rows[0] });
-    });
-  },
-
-  placeBid: (req, res) => {
-    const { auctionId, userId, bidAmount } = req.body;
-
-    Auction.placeBid(auctionId, userId, bidAmount, (err, result) => {
-      if (err) {
-        console.error("Error placing bid:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-      io.to(auctionId).emit("newBid", result.rows[0]); // Emit new bid event
-      res
-        .status(201)
-        .json({ message: "Bid placed successfully", bid: result.rows[0] });
-    });
-  },
-
-  getHighestBid: (req, res) => {
-    const { auctionId } = req.params;
-
-    Auction.getHighestBid(auctionId, (err, result) => {
-      if (err) {
-        console.error("Error fetching highest bid:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-      res.json({ highestBid: result.rows[0] });
-    });
-  },
-
-  getBidsByAuctionId: (req, res) => {
-    const { auctionId } = req.params;
-
-    Auction.getBidsByAuctionId(auctionId, (err, result) => {
-      if (err) {
-        console.error("Error fetching bids:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-      res.json({ bids: result.rows });
-    });
-  },
-
-  stopAuction: (req, res) => {
-    const { auctionId } = req.body;
-
-    Auction.stopAuction(auctionId, (err, result) => {
-      if (err) {
-        console.error("Error stopping auction:", err);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-
-      Auction.getHighestBid(auctionId, (err, result) => {
-        if (err) {
-          console.error("Error fetching highest bid:", err);
-          return res.status(500).json({ error: "Internal server error" });
-        }
-
-        const highestBid = result.rows[0];
-        if (!highestBid) {
-          return res
-            .status(400)
-            .json({ error: "No bids placed on this auction" });
-        }
-
-        Order.create(highestBid.sellerid, highestBid.userid, highestBid.itemno, highestBid.bidamount, (err, result) => {
-          if (err) {
-            console.error("Error creating order:", err);
-            return res.status(500).json({ error: "Internal server error" });
-          }
-          res
-            .status(201)
-            .json({
-              message: "Auction stopped and order created successfully",
-              order: result.rows[0],
-            });
-        });
+  createAuction: async (req, res) => {
+    try {
+      const { itemId, startingBid, endTime } = req.body;
+      const result = await Auction.createAuction(itemId, startingBid, endTime);
+      res.status(201).json({
+        message: "Auction created successfully",
+        auction: result[0],
       });
-    });
+    } catch (err) {
+      console.error("Error creating auction:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
   },
 
-  getAuctionByItemId: (req, res) => {
-    const { itemId } = req.params;
+  getAuctionById: async (req, res) => {
+    try {
+      const { auctionId } = req.params;
+      const result = await Auction.getAuctionById(auctionId);
+      res.json({ auction: result });
+    } catch (err) {
+      console.error("Error fetching auction:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
 
-    Auction.getAuctionByItemId(itemId, (err, result) => {
-      if (err) {
-        console.error("Error fetching auction:", err);
-        return res.status(500).json({ error: "Internal server error" });
+  placeBid: async (req, res) => {
+    try {
+      const { auctionId, userId, bidAmount } = req.body;
+      const result = await Auction.placeBid(auctionId, userId, bidAmount);
+      io.to(auctionId).emit("newBid", result[0]);
+      res.status(201).json({ message: "Bid placed successfully", bid: result[0] });
+    } catch (err) {
+      console.error("Error placing bid:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  getHighestBid: async (req, res) => {
+    try {
+      const { auctionId } = req.params;
+      const result = await Auction.getHighestBid(auctionId);
+      res.json({ highestBid: result });
+    } catch (err) {
+      console.error("Error fetching highest bid:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  getBidsByAuctionId: async (req, res) => {
+    try {
+      const { auctionId } = req.params;
+      const result = await Auction.getBidsByAuctionId(auctionId);
+      res.json({ bids: result });
+    } catch (err) {
+      console.error("Error fetching bids:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  stopAuction: async (req, res) => {
+    try {
+      const { auctionId } = req.body;
+      await Auction.stopAuction(auctionId);
+      const highestBid = await Auction.getHighestBid(auctionId);
+
+      if (!highestBid) {
+        return res.status(400).json({ error: "No bids placed on this auction" });
       }
-      if (result.rows.length === 0) {
+
+      const order = await Order.create(
+        highestBid.sellerid,
+        highestBid.userid,
+        highestBid.itemno,
+        highestBid.bidamount
+      );
+
+      res.status(201).json({
+        message: "Auction stopped and order created successfully",
+        order: order[0],
+      });
+    } catch (err) {
+      console.error("Error stopping auction:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  getAuctionByItemId: async (req, res) => {
+    try {
+      const { itemId } = req.params;
+      const result = await Auction.getAuctionByItemId(itemId);
+      if (!result) {
         return res.status(404).json({ error: "Auction not found" });
       }
-      res.json({ auctionId: result.rows[0].auctionid });
-    });
+      res.json({ auctionId: result.auctionId });
+    } catch (err) {
+      console.error("Error fetching auction:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
   },
 
-  finalizeAuction: (req, res) => {
-    const { auctionId } = req.params;
+  finalizeAuction: async (req, res) => {
+    try {
+      const { auctionId } = req.params;
 
-    pool.connect((err, client, done) => {
-      if (err) throw err;
+      const highestBid = await Auction.getHighestBid(auctionId);
+      if (!highestBid) {
+        return res.status(404).json({ error: "No bids found for this auction" });
+      }
 
-      const shouldAbort = (err) => {
-        if (err) {
-          client.query('ROLLBACK', (err) => {
-            if (err) {
-              console.error('Error rolling back client', err.stack);
-            }
-            done();
-          });
-          res.status(500).json({ error: "Internal server error" });
-        }
-        return !!err;
+      const orderDetails = {
+        auctionId,
+        userId: highestBid.userid,
+        bidAmount: highestBid.bidamount,
+        itemId: highestBid.itemno,
+        sellerId: highestBid.sellerid,
       };
 
-      client.query('BEGIN', (err) => {
-        if (shouldAbort(err)) return;
+      const orderResult = await Order.createOrder(orderDetails);
+      await Auction.stopAuction(auctionId);
 
-        client.query('LOCK TABLE auctions, item IN EXCLUSIVE MODE', (err) => {
-          if (shouldAbort(err)) return;
-
-          Auction.getHighestBid(auctionId, (err, result) => {
-            if (shouldAbort(err)) return;
-
-            const highestBid = result.rows[0];
-            if (!highestBid) {
-              client.query('ROLLBACK', (err) => {
-                if (err) {
-                  console.error('Error rolling back client', err.stack);
-                }
-                done();
-              });
-              return res.status(404).json({ error: "No bids found for this auction" });
-            }
-
-            const { userId, bidAmount } = highestBid;
-            const orderDetails = {
-              auctionId,
-              userId,
-              bidAmount,
-              itemId: highestBid.itemno,
-              sellerId: highestBid.sellerid
-            };
-
-            Order.createOrder(orderDetails, (err, orderResult) => {
-              if (shouldAbort(err)) return;
-
-              Auction.stopAuction(auctionId, (err, stopResult) => {
-                if (shouldAbort(err)) return;
-
-                client.query('COMMIT', (err) => {
-                  if (err) {
-                    console.error('Error committing transaction', err.stack);
-                    res.status(500).json({ error: "Internal server error" });
-                  } else {
-                    res.status(200).json({
-                      message: "Auction finalized and order placed successfully",
-                      order: orderResult.rows[0],
-                      auction: stopResult.rows[0]
-                    });
-                  }
-                  done();
-                });
-              });
-            });
-          });
-        });
+      res.status(200).json({
+        message: "Auction finalized and order placed successfully",
+        order: orderResult[0],
+        auction: { auctionId, status: "stopped" },
       });
-    });
-  }
+    } catch (err) {
+      console.error("Error finalizing auction:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
 });
 
 module.exports = auctionController;

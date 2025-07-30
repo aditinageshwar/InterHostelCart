@@ -1,12 +1,26 @@
-const bcrypt = require('bcrypt');
-const saltRounds = 10; 
+const bcrypt = require("bcrypt");
+const pool = require("./db"); 
+const saltRounds = 10;
 
-const plainTextPassword = 'Aditi Nageshwar'; 
+(async () => {
+  try {
+    const [rows] = await pool.query("SELECT emailid, userpassword FROM usertable");
 
-bcrypt.hash(plainTextPassword, saltRounds, (err, hash) => {
-    if (err) {
-        console.error('Error hashing password:', err);
-        return;
+    for (const user of rows) {
+      if (user.userpassword.startsWith("$2b$")) {
+        console.log(`Already hashed: ${user.emailid}`);
+        continue;
+      }
+
+      const hashed = await bcrypt.hash(user.userpassword, saltRounds);
+      await pool.query("UPDATE usertable SET userpassword = ? WHERE emailid = ?", [hashed, user.emailid]);
+      console.log(`Password hashed for ${user.emailid}`);
     }
-    console.log('Hashed password:', hash);
-});
+  } 
+  catch (err) {
+    console.error("Error during hashing:", err);
+  } 
+  finally {
+    await pool.end(); 
+  }
+})();

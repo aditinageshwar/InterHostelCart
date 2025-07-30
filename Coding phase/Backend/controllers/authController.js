@@ -1,58 +1,57 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
 const authController = {
-  signup: (req, res) => {
-    const { emailid, hostelno, roomno, username, userdob, userphoneno, userpassword, userdept, usercourse } = req.body;
+  signup: async (req, res) => {
+    try {
+      const {emailid, hostelno, roomno, username, userdob, userphoneno, userpassword, userdept, usercourse} = req.body;
+      const hashedPassword = await bcrypt.hash(userpassword, 10);
 
-    bcrypt.hash(userpassword, 10, (err, hash) => {
-      if (err) {
-        console.error('Error hashing password:', err);
-        return res.status(500).json({ error: 'Internal server error' });
+      await User.create(emailid, hostelno, roomno, username, userdob, userphoneno, hashedPassword, userdept, usercourse);
+      res.status(201).json({ message: 'User registered successfully' });
+    } 
+    catch (error) {
+      console.error('Signup error:', error);
+      if (error.code === 'ER_DUP_ENTRY' && error.sqlMessage.includes('emailid')) {
+        return res.status(400).json({
+          message: 'This email is already registered. Try logging in.'
+        });
       }
 
-      User.create(emailid, hostelno, roomno, username, userdob, userphoneno, hash, userdept, usercourse, (err, result) => {
-        if (err) {
-          console.error('Error executing query:', err);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
-        res.status(201).json({ message: 'User registered successfully' });
+      res.status(500).json({
+        message: 'Internal server error',
+        error: error.message
       });
-    });
+    }
   },
 
-  login: (req, res) => {
-    const { email, password } = req.body;
+login: async (req, res) => {
+  const { emailid, userpassword } = req.body;
+  try {
+    const result = await User.findByEmail(emailid);
 
-    User.findByEmail(email, (err, result) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    if (!result || result.length === 0) {
+      return res.status(401).json({ error: 'Email does not exist. Please sign up to continue.' });
+    }
 
-      if (result.rows.length === 0) {
-        return res.status(401).json({ error: 'Invalid email or password' });
-      }
+    const user = result[0];
+    const isMatch = await bcrypt.compare(userpassword, user.userPassword);
 
-      const user = result.rows[0];
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
 
-      bcrypt.compare(password, user.userpassword, (err, isMatch) => {
-        if (err) {
-          console.error('Error comparing passwords:', err);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
-
-        if (!isMatch) {
-          return res.status(401).json({ error: 'Invalid email or password' });
-        }
-
-        const token = jwt.sign({ userId: user.userid, admin: user.admin }, secretKey, { expiresIn: '1h' });
-        res.json({ token, admin: user.admin });
-      });
-    });
+    const token = jwt.sign({ userId: user.userID, admin: user.admin || false }, secretKey, { expiresIn: '1h' });
+    res.status(200).json({ token, admin: user.admin || false });
+  } 
+  catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: 'Internal server error' });
   }
+}
 };
 
 module.exports = authController;

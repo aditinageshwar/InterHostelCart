@@ -1,14 +1,29 @@
 const pool = require('../config/db');
 
 const Chat = {
-  findByRoom: (room, callback) => {
-    const sqlSelect = "SELECT * FROM chatService WHERE room = $1 ORDER BY messageTime ASC";
-    pool.query(sqlSelect, [room], callback);
+  findByRoom: async (room) => {
+    try {
+      const sqlSelect = "SELECT * FROM chatService WHERE room = ? ORDER BY messageTime ASC";
+      const [rows] = await pool.query(sqlSelect, [room]);
+      return rows;
+    } 
+    catch (error) {
+      throw error;
+    }
   },
 
-  saveMessage: (room, senderID, receiverID, itemNO, messageContent, callback) => {
-    const sqlInsert = "INSERT INTO chatService (room, senderID, receiverID, itemNO, messageTime, messageContent, report) VALUES ($1, $2, $3, $4, NOW(), $5, false)";
-    pool.query(sqlInsert, [room, senderID, receiverID, itemNO, messageContent], callback);
+  saveMessage: async (room, senderID, receiverID, itemNO, messageContent) => {
+    try {
+      const sqlInsert = `
+        INSERT INTO chatService (room, senderID, receiverID, itemNO, messageTime, messageContent, report)
+        VALUES (?, ?, ?, ?, NOW(), ?, false)
+      `;
+      const [result] = await pool.query(sqlInsert, [room, senderID, receiverID, itemNO, messageContent]);
+      return result;
+    } 
+    catch (error) {
+      throw error;
+    }
   }
 };
 

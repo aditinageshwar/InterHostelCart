@@ -1,57 +1,64 @@
 const Order = require('../models/orderModel');
+const Auction = require('../models/auctionModel');
 
 const orderController = {
-  createOrder: (req, res) => {
+  createOrder: async (req, res) => {
     const { auctionId } = req.body;
 
-    Auction.getHighestBid(auctionId, (err, result) => {
-      if (err) {
-        console.error('Error fetching highest bid:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
+    try {
+      const bidResult = await Auction.getHighestBid(auctionId);
+      const highestBid = bidResult[0];
 
-      const highestBid = result.rows[0];
       if (!highestBid) {
         return res.status(400).json({ error: 'No bids placed on this auction' });
       }
 
-      Order.create(highestBid.userId, highestBid.itemId, (err, result) => {
-        if (err) {
-          console.error('Error creating order:', err);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
-        res.status(201).json({ message: 'Order created successfully', order: result.rows[0] });
+      const orderResult = await Order.create(
+        highestBid.sellerid,
+        highestBid.userid,
+        highestBid.itemid,
+        highestBid.bidamount
+      );
+
+      res.status(201).json({
+        message: 'Order created successfully',
+        order: orderResult
       });
-    });
+
+    } 
+    catch (err) {
+      console.error('Error creating order:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   },
 
-  getUserOrders: (req, res) => {
+  getUserOrders: async (req, res) => {
     const userId = req.user.userId;
-    
-    Order.findByUserId(userId, (err, result) => {
-      if (err) {
-        console.error('Error retrieving orders:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-      res.json({ orders: result.rows });
-    });
+    try {
+      const orders = await Order.findByUserId(userId);
+      res.json({ orders });
+    } 
+    catch (err) {
+      console.error('Error retrieving orders:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   },
 
-  getOrderById: (req, res) => {
+  getOrderById: async (req, res) => {
     const orderId = req.params.id;
+    try {
+      const order = await Order.findById(orderId);
 
-    Order.findById(orderId, (err, result) => {
-      if (err) {
-        console.error('Error retrieving order:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-
-      if (result.rows.length === 0) {
+      if (order.length === 0) {
         return res.status(404).json({ error: 'Order not found' });
       }
 
-      res.json({ order: result.rows[0] });
-    });
+      res.json({ order: order[0] });
+    } 
+    catch (err) {
+      console.error('Error retrieving order:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
