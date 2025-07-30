@@ -1,6 +1,4 @@
 # Inter_HostelCart
-This is our Semester Unified Project covering the core subjects like (DBMS, Software Engineering, OOD using UML, Web Development).
-
 Title: Inter-Hostel Cart: Fostering Community and Convenience through Hostel-wide Commerce
 
 Tech Stack:
@@ -33,17 +31,3 @@ Benefits:
 - **Environmental Impact**: Encouraging reuse and recycling of goods reduces waste and promotes sustainability within the hostel environment.
 
 Inter-Hostel Cart revolutionizes the way students engage in commerce within their living spaces, transforming hostels into vibrant hubs of connectivity, collaboration, and convenience.
-
-
-**Project Contributors:**
-
-  - **(Lead)** Name: Rishav Chakraborty, Roll: 2320403219
-  - Name: Atul Tandan, Roll:2320403203
-  - Name: Manjit Khumbhakar, Roll: 2320403123
-  - Name: Shruti Gupta, Roll: 2320403216
-  - Name: Aditi Nageshwar, Roll:2320403223
-
-
-**Project Co-ordinator:**
-
-  - Prof: Amit Bhagat
