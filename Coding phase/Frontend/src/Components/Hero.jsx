@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Carousel from "./Carousel";
 import { gsap } from "gsap";
-import { getItems } from '../api';
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -70,11 +69,10 @@ useEffect(() => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const data = await getItems();
-        console.log("Fetched items:", data);
-
-        setItems(Array.isArray(data) ? data : []);
-      } catch (error) {
+        const response = await axios.get('http://localhost:3001/api/items');
+        setItems(Array.isArray(response.data) ? response.data : []);
+      } 
+      catch (error) {
         console.error('Error fetching items:', error);
         setError('Failed to fetch items');
       }
@@ -108,12 +106,9 @@ useEffect(() => {
   }, []);
 
   // Filter items based on search and user
-  const filteredItems = Array.isArray(items)
-    ? items.filter(item =>
-        item.itemname?.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        item.sellerid !== userid
-      )
-    : [];
+  // const filteredItems = Array.isArray(items) ? items.filter(item =>
+  //       item.itemname?.toLowerCase().includes(searchQuery.toLowerCase()) &&
+  //       item.sellerid !== userid) : [];
 
   const handleDivClick = (itemid) => {
     navigate(`/item/${itemid}`);
@@ -167,21 +162,21 @@ useEffect(() => {
           <div className="text-center py-10 text-red-500 font-semibold">{error}</div>
         ) : (
           <div className="products grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 content-center bg-gray-100 p-8 rounded-2xl shadow-lg">
-            {filteredItems.length > 0 ? (
-              filteredItems.map(item => (
+            {items.length > 0 ? (
+              items.map(item => (
                 <div
-                  key={item.itemno}
+                  key={item.itemNO}
                   className="product h-[350px] space-y-2 cursor-pointer rounded-xl shadow-2xl p-4 overflow-hidden transform transition duration-500 hover:scale-105"
-                  onClick={() => handleDivClick(item.itemno)}
+                  onClick={() => handleDivClick(item.itemNO)}
                 >
                   <img
                     className="w-full h-4/5 object-cover"
                     loading="lazy"
-                    src={item.itemphotourl}
-                    alt={item.itemname}
+                    src={item.itemPhotoURL}
+                    alt={item.itemName}
                   />
-                  <p className="font-semibold text-gray-600">{item.itemname}</p>
-                  <h1 className="text-xl font-semibold">₹{item.itemprice}</h1>
+                  <p className="font-semibold text-gray-600">{item.itemName}</p>
+                  <h1 className="text-xl font-semibold">₹{item.itemPrice}</h1>
                 </div>
               ))
             ) : (
