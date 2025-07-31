@@ -39,6 +39,28 @@ const itemController = {
     }
   },
 
+  getItemsByGender: async (req, res) => {
+  const { gender } = req.params;
+  try {
+    const result = await Item.getByGender(gender);
+    res.send(result);
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).json({ error: err.message });
+  }
+},
+
+getItemsByHostel: async (req, res) => {
+  const { hostelNo } = req.params;
+  try {
+    const result = await Item.getByHostel(hostelNo);
+    res.send(result);
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).json({ error: err.message });
+  }
+},
+
   getItemsByGenderAndSeller: async (req, res) => {
     const { gender, id } = req.params;
     try {
@@ -88,17 +110,6 @@ const itemController = {
     try {
       await Item.removeById(id.id);
       res.status(201).json({ message: 'Item removed successfully' });
-    } catch (err) {
-      console.error('Error executing query:', err);
-      res.status(500).json({ error: err.message });
-    }
-  },
-
-  getItemsByHostel: async (req, res) => {
-    const tag = req.params;
-    try {
-      const result = await Item.getByHostel(tag);
-      res.send(result);
     } catch (err) {
       console.error('Error executing query:', err);
       res.status(500).json({ error: err.message });

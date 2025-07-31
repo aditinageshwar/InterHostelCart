@@ -17,6 +17,18 @@ const Item = {
     return result;
   },
 
+  getByGender: async (gender) => {
+    const sql = "SELECT * FROM item WHERE gender = ?";
+    const [rows] = await pool.query(sql, [gender]);
+    return rows;
+  },
+
+  getByHostel: async (hostelNo) => {
+    const sql = "SELECT  i.itemNO, i.itemName, i.itemDescription, i.itemPrice, i.itemTags, i.itemVisit, i.itemPhotoURL FROM item i JOIN usertable u ON i.sellerId = u.userID WHERE u.hostelNo = ?";
+    const [rows] = await pool.query(sql, [parseInt(hostelNo, 10)]);
+    return rows;
+  },
+
   getByGenderAndSeller: async (gender, sellerID) => {
     const sql = "SELECT * FROM item WHERE gender = ? AND sellerID = ?";
     const [rows] = await pool.query(sql, [gender, sellerID]);
@@ -24,8 +36,8 @@ const Item = {
   },
 
   getByTag: async ({ tag }) => {
-    const sql = "SELECT * FROM item WHERE LOWER(itemTags) = ?";
-    const [rows] = await pool.query(sql, [tag.toLowerCase()]);
+    const sql = "SELECT * FROM item WHERE LOWER(itemTags) LIKE ?";
+    const [rows] = await pool.query(sql, [`%${tag.toLowerCase()}%`]);
     return rows;
   },
 
@@ -58,17 +70,6 @@ const Item = {
   removeById: async ({ id }) => {
     const [result] = await pool.query("DELETE FROM item WHERE itemNo = ?", [id]);
     return result;
-  },
-
-  getByHostel: async ({ hostel }) => {
-    const sql = `
-      SELECT item.* 
-      FROM item
-      JOIN usertable ON item.sellerID = usertable.userID
-      WHERE usertable.hostelno = ?
-    `;
-    const [rows] = await pool.query(sql, [hostel]);
-    return rows;
   }
 };
 

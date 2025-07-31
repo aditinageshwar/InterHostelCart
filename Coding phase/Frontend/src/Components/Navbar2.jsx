@@ -26,7 +26,7 @@ const Navbar = () => {
   const handleHostelChange = (event) => {
     const selectedPage = event.target.value;
     if (selectedPage) {
-      navigate(`/hostel/${selectedPage}`); // Navigate to the selected page
+      navigate(selectedPage); // Navigate to the selected page
     }
   };
   const handleLogout = () => {
@@ -142,18 +142,18 @@ return (
                     <Link to="/" className="hover:text-gray-600">HOME</Link>
                     <select name="hostel" className=" bg-gray-700" onChange={handleHostelChange} defaultValue="" >
                     <option value="">Hostel</option>
-                      <option value="1" >Hostel:1</option>
-                      <option value="2"  >Hostel:2</option>
-                      <option value="3"  >Hostel:3</option>
-                      <option value="4"  >Hostel:4</option>
-                      <option value="5"  >Hostel:5</option>
-                      <option value="6"  >Hostel:6</option>
-                      <option value="7"  >Hostel:7</option>
-                      <option value="8"  >Hostel:8</option>
-                      <option value="9"  >Hostel:9</option>
-                      <option value="10"  >Hostel:10</option>
-                      <option value="11"  >Hostel:11</option>
-                      <option value="12"  >Hostel:12</option>
+                      <option value="/1" >Hostel:1</option>
+                      <option value="/2"  >Hostel:2</option>
+                      <option value="/3"  >Hostel:3</option>
+                      <option value="/4"  >Hostel:4</option>
+                      <option value="/5"  >Hostel:5</option>
+                      <option value="/6"  >Hostel:6</option>
+                      <option value="/7"  >Hostel:7</option>
+                      <option value="/8"  >Hostel:8</option>
+                      <option value="/9"  >Hostel:9</option>
+                      <option value="/10"  >Hostel:10</option>
+                      <option value="/11"  >Hostel:11</option>
+                      <option value="/12"  >Hostel:12</option>
                    </select>
                     <select name="collection" className=" bg-gray-700" onChange={handleSelectChange} defaultValue="" >
                     <option value="">Clothing</option>

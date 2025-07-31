@@ -1,35 +1,29 @@
-import React, { useEffect } from 'react';
-import { FaTelegramPlane, FaMobileAlt, FaLinkedin, FaInstagram, FaFacebook, FaBell } from "react-icons/fa";
-
+import { FaTelegramPlane, FaMobileAlt, FaLinkedin, FaInstagram, FaFacebook, FaBell, FaTwitter } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
- 
-
-   
   return (
-    <footer 
-      className="py-5 bg-gray-800"
-    >
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="py-5 bg-gray-800">
+      <div className="container px-12 mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="mb-3">
           <h5 className="text-lg font-semibold mb-2 text-gray-100">Important Links</h5>
           <ul className="space-y-2">
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Home</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Chats</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">profile</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">FAQs</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">About</a></li>
+            <li><Link to="/" className="text-gray-300 hover:text-gray-100">Home</Link></li>
+            <li><Link to="#" className="text-gray-300 hover:text-gray-100">Chats</Link></li>
+            <li><Link to="/profile" className="text-gray-300 hover:text-gray-100">Profile</Link></li>
+            <li><Link to="/deal" className="text-gray-300 hover:text-gray-100">Deals</Link></li>
+            <li><Link to="#" className="text-gray-300 hover:text-gray-100">About</Link></li>
           </ul>
         </div>
 
         <div className="mb-3">
           <h5 className="text-lg font-semibold mb-2 text-gray-100">Category</h5>
           <ul className="space-y-2">
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Women</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Men</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Electronics</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Accessories</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100">Computer and Office</a></li>
+            <li><a href="/sport" className="text-gray-300 hover:text-gray-100">Sport</a></li>
+            <li><a href="/stationary" className="text-gray-300 hover:text-gray-100">Stationary</a></li>
+            <li><a href="/electronics" className="text-gray-300 hover:text-gray-100">Electronics</a></li>
+            <li><a href="/accessories" className="text-gray-300 hover:text-gray-100">Accessories</a></li>
+            <li><a href="/vehicle" className="text-gray-300 hover:text-gray-100">Vehicle</a></li>
           </ul>
         </div>
 
@@ -37,12 +31,13 @@ const Footer = () => {
           <h5 className="text-lg font-semibold mb-2 text-gray-100">Contact Us</h5>
           <ul className="space-y-2">
             <li><a href="#" className="text-gray-300 hover:text-gray-100 flex items-center"><FaTelegramPlane className="mr-2" /> Manit, Bhopal</a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100 flex items-center"><FaMobileAlt className="mr-2" /> 9123456789</a></li>
+            <li><a href="#" className="text-gray-300 hover:text-gray-100 flex items-center"><FaMobileAlt className="mr-2" /> 9340520507 </a></li>
           </ul>
           <ul className="flex space-x-4 mt-4">
-            <li><a href="#" className="text-gray-300 hover:text-gray-100"><FaInstagram /></a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100"><FaFacebook /></a></li>
-            <li><a href="#" className="text-gray-300 hover:text-gray-100"><FaLinkedin /></a></li>
+            <li><a href="#" className="text-gray-300 hover:text-gray-100 text-[20px]"><FaInstagram /></a></li>
+            <li><a href="#" className="text-gray-300 hover:text-gray-100 text-[20px]"><FaFacebook /></a></li>
+            <li><a href="https://www.linkedin.com/in/aditinageshwar/" className="text-gray-300 hover:text-gray-100 text-[20px]"><FaLinkedin /></a></li>
+            <li><a href="#" className="text-gray-300 hover:text-gray-100 text-[20px]"><FaTwitter /></a></li>
           </ul>
         </div>
 

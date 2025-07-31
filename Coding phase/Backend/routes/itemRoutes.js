@@ -5,6 +5,8 @@ const authenticateToken = require('../middleware/authMiddleware');
 
 router.get('/', itemController.getAllItems);
 router.post('/', itemController.createItem);
+router.get('/gender/:gender', itemController.getItemsByGender);
+router.get('/hostel/:hostelNo',itemController.getItemsByHostel);
 router.get('/:gender/:id', itemController.getItemsByGenderAndSeller);
 router.get('/:tag',itemController.getItemsByTag);
 router.get('/great/atul/:id',itemController.getItemById);

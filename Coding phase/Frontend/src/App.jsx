@@ -16,11 +16,10 @@ import Item from './pages/Item';
 import AdminDashboard from './pages/AdminDashboard';
 import Auction from './pages/Auction';
 import Myitem from './Components/Myitem';
-import Hostelitem from './pages/Hostelitem';
 
 function App() {
-
-
+  const tagRoutes = ["electronics", "accessories", "stationary", "vehicle", "sport", "medicine"];
+  const hostelRoutes = [1,2,3,4,5,6,7,8,9,10,11,12];
 
   return (
     <Router>
@@ -35,12 +34,15 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/mens" element={<UnifiedSection gender="male" />} />
           <Route path="/womens" element={<UnifiedSection gender="female" />} />
-          <Route path="/electronics" element={<UnifiedSection tag="electronics" />} />
-          <Route path="/accessories" element={<UnifiedSection tag="accessories" />} />
-          <Route path="/stationary" element={<UnifiedSection tag="stationary" />} />
-          <Route path="/vehicle" element={<UnifiedSection tag="vehicle" />} />
-          <Route path="/sport" element={<UnifiedSection tag="sport" />} />
-          <Route path="/medicine" element={<UnifiedSection tag="medicine" />} />
+          
+          {tagRoutes.map(tag => (
+            <Route key={tag} path={`/${tag}`} element={<UnifiedSection tag={tag} />} />
+          ))}
+
+          {hostelRoutes.map(hostelNo => (
+            <Route key={hostelNo} path={`/${hostelNo}`} element={<UnifiedSection hostelNo={hostelNo} />} />
+          ))}
+
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/mycart" element={<Mycart />} />
@@ -48,7 +50,6 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/auction" element={<Auction />} />
           <Route path="/myitem" element={<Myitem />} />
-          <Route path="/hostel/:hostelno" element={<Hostelitem />} />
         </Routes>
       </Layout>
     </Router>
