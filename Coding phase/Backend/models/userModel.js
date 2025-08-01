@@ -21,7 +21,6 @@ const User = {
     const sqlSelect = "SELECT * FROM usertable WHERE emailid = ?";
     try {
       const [rows] = await pool.query(sqlSelect, [email]);
-      console.log("Query results in findByEmail:", rows);
       return rows;
     } catch (err) {
       console.error("Error in findByEmail:", err);
@@ -40,13 +39,13 @@ const User = {
     }
   },
 
-  updateMobileNumber: async (userId, mobileNumber) => {
-    const sqlUpdate = "UPDATE usertable SET userphoneno = ? WHERE userid = ?";
+  updateProfileDetails: async (userId, details) => {
+    const sqlUpdate = "UPDATE usertable SET userphoneno = ?, hostelno = ?, roomno = ? WHERE userid = ?";
     try {
-      const [result] = await pool.query(sqlUpdate, [mobileNumber, userId]);
+      const [result] = await pool.query(sqlUpdate, [details.mobileNumber, details.hostelNumber, details.roomNumber, userId]);
       return result;
     } catch (err) {
-      console.error("Error in updateMobileNumber:", err);
+      console.error("Error in updateProfileDetails: ", err);
       throw err;
     }
   },

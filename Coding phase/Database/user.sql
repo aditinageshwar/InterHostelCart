@@ -36,4 +36,4 @@ ALTER TABLE usertable ADD COLUMN reported boolean;
 
 UPDATE usertable SET reported = FALSE;
 
-SELECT * FROM usertable;
+ALTER TABLE usertable ADD COLUMN profileImage VARCHAR(65535);

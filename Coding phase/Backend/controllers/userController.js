@@ -20,10 +20,10 @@ const userController = {
 
   updateProfile: async (req, res) => {
     const userId = req.user.userId;
-    const { mobileNumber } = req.body;
+    const { mobileNumber, hostelNumber, roomNumber } = req.body;
 
     try {
-      await User.updateMobileNumber(userId, mobileNumber);
+      await User.updateProfileDetails(userId, { mobileNumber, hostelNumber, roomNumber });
       res.json({ message: 'Profile updated successfully' });
     } catch (err) {
       console.error('Error executing query:', err);

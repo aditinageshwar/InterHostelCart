@@ -152,9 +152,9 @@ useEffect(() => {
       <div className="w-5/6 m-auto space-y-10 mt-12">
         <h1 className="text-4xl font-bold text-center bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">Products</h1>
         {loading ? (
-          <div className="text-center py-10 text-4xl font-bold bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">Loading...</div>
+          <div className="text-center py-10 text-2xl font-semibold text-gray-500">Loading...</div>
         ) : error ? (
-          <div className="text-center py-10 text-4xl font-bold bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">{error}</div>
+          <div className="text-center py-10 text-2xl font-semibold text-gray-500">{error}</div>
         ) : (
           <div className="products grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 content-center bg-gray-100 p-8 rounded-2xl shadow-lg">
             {items.length > 0 ? (
