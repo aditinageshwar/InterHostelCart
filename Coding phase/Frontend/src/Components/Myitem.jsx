@@ -71,15 +71,15 @@ const Myitem = () => {
   };
 
   if (loading) {
-    return <div className="text-center m-32 text-2xl">Loading...</div>;
+    return <div className="text-center mt-20 mb-40 text-xl text-semibold text-emerald-500">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center m-32 text-2xl text-red-500">{error}</div>;
+    return <div className="text-center mt-20 mb-40 text-xl text-semibold text-red-400">{error}</div>;
   }
 
   if (items.length === 0) {
-    return <div className="text-center m-32 text-2xl">No Items</div>;
+    return <div className="text-center mt-20 mb-40 text-xl text-semibold text-emerald-500">No Items</div>;
   }
 
   return (

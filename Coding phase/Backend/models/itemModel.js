@@ -10,8 +10,8 @@ const Item = {
     const sql = `
       INSERT INTO item (
         sellerID, itemName, itemPrice, itemDescription, itemTags, 
-        listingDate, reportflag, itemVisit, itemPhotoURL
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        listingDate, reportflag, itemVisit, itemPhotoURL, gender
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const [result] = await pool.query(sql, itemData);
     return result;

@@ -31,7 +31,7 @@ const Profile = () => {
         setProfileImage(user.profileImage || base);
       } 
       catch (error) {
-        setError('Failed to fetch profile data');
+        setError('Failed to fetch profile data, First login then try!');
       }
     };
 
@@ -79,11 +79,11 @@ const Profile = () => {
   };
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className='text-red-400 text-semibold text-xl text-center mt-20 mb-40'>{error}</div>;
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg shadow-gray-500/70 max-w-lg mx-auto mt-10 mb-10">
+    <div className="p-6 bg-stone-50 rounded-lg shadow-lg shadow-gray-500/70 max-w-lg mx-auto mt-10 mb-10">
       <h2 className="text-3xl font-semibold mb-6 text-center bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">Profile</h2>
       <div className="flex flex-col items-center mb-6">
         <div className="relative mb-4">

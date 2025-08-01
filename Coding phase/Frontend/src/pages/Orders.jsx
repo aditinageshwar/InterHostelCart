@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// Simplified component implementations
 const Card = ({ children, className }) => (
   <div className={`bg-white shadow-md rounded-lg ${className}`}>{children}</div>
 );
@@ -56,7 +55,6 @@ const Input = ({ className, ...props }) => (
   />
 );
 
-// Icons (simplified)
 const ChevronDown = () => <span>▼</span>;
 const ArrowLeft = () => <span>←</span>;
 const Search = () => <span>🔍</span>;
@@ -138,11 +136,11 @@ const Orders = () => {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='text-center mt-20 mb-40 text-xl text-semibold text-emerald-500'>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="text-center mt-20 mb-40 text-xl text-semibold text-red-400">{error}</div>;
   }
 
   return (

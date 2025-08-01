@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 const AddItem = () => {
   const [userid, setUserid] = useState('');
   const [formData, setFormData] = useState({
-    sellerID: '', // This will be set after fetching the user ID
+    sellerID: '', 
     itemName: '',
     itemPrice: '',
     itemDescription: '',
@@ -21,20 +21,31 @@ const AddItem = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = Cookies.get('token');
+      if (!token) {
+        setError('Please sign in to add your item for selling');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const token = Cookies.get('token');
         const response = await axios.get('http://localhost:3001/api/user/profile', {
           headers: {
-            authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         });
-        setUserid(response.data.user.userid);
+        setUserid(response.data.user.userID);
         setFormData((prevData) => ({
           ...prevData,
-          sellerID: response.data.user.userid
+          sellerID: response.data.user.userID
         }));
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error fetching user:', error);
+        setError('Failed to fetch user profile');
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -57,9 +68,9 @@ const AddItem = () => {
   };
 
   const handleAddItem = async () => {
-    const { sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, itemPhotoURL } = formData;
-
-    if (!itemName || !itemPrice || !itemDescription || !itemTags || !itemPhotoURL) {
+    const { sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, itemPhotoURL, gender } = formData;
+    
+    if (!itemName || !itemPrice || !itemDescription || !itemTags || !itemPhotoURL || !gender) {
       setError('All fields are required');
       return;
     }
@@ -68,28 +79,40 @@ const AddItem = () => {
     setError('');
     setSuccess('');
 
-    try {
-      // Upload the image to Firebase
-      const storageRef = ref(storage, `images/${itemPhotoURL.name}`);
-      await uploadBytes(storageRef, itemPhotoURL);
-      const imageUrl = await getDownloadURL(storageRef);
+    try 
+    {
+      const imageData = new FormData();
+      imageData.append('itemPhotoURL', itemPhotoURL);
+      const res = await axios.post("http://localhost:3001/api/uploadImage", imageData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const normalizedPath = res.data.path.replace(/\\/g, '/');           //replace backslashes with forward slashes
+      const imageUrl = `http://localhost:3001/${normalizedPath}`;
 
-      // Convert form data to URL-encoded format
+      // const storageRef = ref(storage, `images/${itemPhotoURL.name}`);
+      // console.log("storageRef: ", storageRef);
+      // await uploadBytes(storageRef, itemPhotoURL);
+      // console.log("Image uploaded. Fetching URL...");
+
+      // const imageUrl = await getDownloadURL(storageRef);
+      // console.log("Image URL received:", imageUrl);
+
+     
       const urlEncodedData = new URLSearchParams();
       urlEncodedData.append('sellerID', sellerID);
       urlEncodedData.append('itemName', itemName);
       urlEncodedData.append('itemPrice', itemPrice);
       urlEncodedData.append('itemDescription', itemDescription);
       urlEncodedData.append('itemTags', itemTags);
+      urlEncodedData.append('gender', gender);
       urlEncodedData.append('listingDate', listingDate);
       urlEncodedData.append('itemPhotoURL', imageUrl);
 
-      // Send the form data with the image URL
       const response = await axios.post('http://localhost:3001/api/items', urlEncodedData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
+       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+     });
 
       setSuccess('Item added successfully');
       setFormData({
@@ -98,10 +121,12 @@ const AddItem = () => {
         itemPrice: '',
         itemDescription: '',
         itemTags: '',
+        gender: '',
         listingDate: new Date().toISOString().split('T')[0],
         itemPhotoURL: ''
       });
-    } catch (err) {
+    } 
+    catch (err) {
       setError('Failed to add item');
     } finally {
       setLoading(false);
@@ -110,11 +135,13 @@ const AddItem = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Add Item for Selling</h2>
+      <h2 className="text-2xl font-bold text-center mb-4 bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">
+        Add Item for Selling
+      </h2>
       {error && <div className="mb-4 text-red-500">{error}</div>}
       {success && <div className="mb-4 text-green-500">{success}</div>}
       <div className="mb-4">
-        <label className="block text-sm">Item Name</label>
+        <label className="block text-sm text-gray-800">Item Name</label>
         <input
           type="text"
           name="itemName"
@@ -124,7 +151,7 @@ const AddItem = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-sm">Item Price</label>
+        <label className="block text-sm text-gray-800">Item Price</label>
         <input
           type="number"
           name="itemPrice"
@@ -134,8 +161,9 @@ const AddItem = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-sm">Item Description</label>
+        <label className="block text-sm text-gray-800">Item Description</label>
         <textarea
+          cols = "3"
           name="itemDescription"
           value={formData.itemDescription}
           onChange={handleChange}
@@ -143,7 +171,7 @@ const AddItem = () => {
         />
       </div>
       <div className="mb-4">
-        <label className="block text-sm">Item Tags</label>
+        <label className="block text-sm text-gray-800">Item Tags</label>
         <select
           id="options"
           name="itemTags"
@@ -152,26 +180,40 @@ const AddItem = () => {
           className="w-full px-4 py-2 border rounded-lg"
         >
           <option value="">Select a tag</option>
-          <option value="clothing">Clothings</option>
-          <option value="electronics">Electronics</option>
-          <option value="stationary">Stationary</option>
-          <option value="vehicle">Vehicle</option>
-          <option value="sport">Sport</option>
-          <option value="medicine">Medicine</option>
-          <option value="accessories">Accessories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Stationary">Stationary</option>
+          <option value="Vehicle">Vehicle</option>
+          <option value="Sport">Sport</option>
+          <option value="Medicine">Medicine</option>
+          <option value="Accessories">Accessories</option>
         </select>
       </div>
       <div className="mb-4">
-        <label className="block text-sm">Item Photo</label>
+        <label className="block text-sm text-gray-800">Item Photo</label>
         <input
           type="file"
           name="itemPhotoURL"
           onChange={handleImageChange}
-          className="w-full"
+          className="w-full ml-2"
         />
       </div>
       <div className="mb-4">
-        <label className="block text-sm">Listing Date</label>
+        <label className="block text-sm text-gray-800">Item recommended for</label>
+        <select
+          id="options2"
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-lg"
+        >
+          <option value="">Select a gender</option>
+          <option value="he">Men</option>
+          <option value="she">Women</option>
+          <option value="heshe">Both</option>
+        </select>
+      </div>  
+      <div className="mb-4">
+        <label className="block text-sm text-gray-800">Listing Date</label>
         <input
           type="text"
           name="listingDate"
@@ -182,7 +224,8 @@ const AddItem = () => {
       </div>
       <button
         onClick={handleAddItem}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        className="bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400 hover:from-sky-600 hover:via-cyan-500 hover:to-teal-500 shadow-lg 
+                  text-white px-4 py-2 rounded-lg w-[150px]"
         disabled={loading}
       >
         {loading ? 'Adding...' : 'Add Item'}

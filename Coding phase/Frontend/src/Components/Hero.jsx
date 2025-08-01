@@ -50,14 +50,16 @@ useEffect(() => {
       try {
         const response = await axios.get('http://localhost:3001/api/user/profile', {
           headers: {
-            authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         });
-        setUserid(response.data.user.userid);
-      } catch (error) {
+        setUserid(response.data.user.userID);
+      } 
+      catch (error) {
         console.error('Error fetching user:', error);
         setError('Failed to fetch user profile');
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
     };

@@ -18,22 +18,24 @@ const itemController = {
       itemPrice,
       itemDescription,
       itemTags,
+      gender,
       listingDate,
       itemPhotoURL
     } = req.body;
 
-    if (!sellerID || !itemName || !itemPrice || !itemDescription || !itemTags || !listingDate || !itemPhotoURL) {
+    if (!sellerID || !itemName || !itemPrice || !itemDescription || !itemTags || !listingDate || !itemPhotoURL || !gender) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
     const reportflag = 0;
     const itemVisit = 0;
-    const itemData = [sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL];
+    const itemData = [sellerID, itemName, itemPrice, itemDescription, itemTags, listingDate, reportflag, itemVisit, itemPhotoURL, gender];
 
     try {
       const result = await Item.create(itemData);
       res.status(201).json({ message: 'Item added successfully', itemId: result.insertId });
-    } catch (err) {
+    } 
+    catch (err) {
       console.error('Error executing query:', err);
       res.status(500).json({ error: err.message });
     }

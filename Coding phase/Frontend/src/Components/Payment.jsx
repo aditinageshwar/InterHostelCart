@@ -19,23 +19,24 @@ const Payment = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Payment Methods</h2>
+      <h2 className="text-2xl font-semibold mb-6 bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">
+        Payment Methods
+      </h2>
       
       {/* List of Payment Methods */}
       <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-2">Available Payment Methods</h3>
-        <ul className="list-disc list-inside mb-4">
-          <li>
+        <ul className="list-disc list-inside mb-4 list-none">
+          <li className="mb-4">
             <button onClick={() => setActivePaymentMethod('upi')} className="flex items-center text-blue-500">
               <SiGooglepay className="text-2xl mr-2" /> Google Pay / <SiPhonepe className="text-2xl ml-2 mr-2" /> PhonePe
             </button>
           </li>
-          <li>
+          <li className="mb-4">
             <button onClick={() => setActivePaymentMethod('razorpay')} className="flex items-center text-blue-500">
               <RiPaypalLine className="text-2xl mr-2" /> Razorpay
             </button>
           </li>
-          <li>
+          <li className="mb-16">
             <button onClick={() => setActivePaymentMethod('cards')} className="flex items-center text-blue-500">
               <AiOutlineCreditCard className="text-2xl mr-2" /> Cards (Debit/Credit)
             </button>

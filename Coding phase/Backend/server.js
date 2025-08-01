@@ -1,7 +1,16 @@
 require('dotenv').config();
+
 const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
+
 const authRoutes = require('./routes/authRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -10,24 +19,33 @@ const orderRoutes = require('./routes/orderRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const auctionRoutes = require('./routes/auctionRoutes');
 const hostelRoutes = require('./routes/hostelRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
-const { Server } = require('socket.io');
-
-const app = express();
-const server = require('http').createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
-});
+// Ensure 'uploads' folder exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/uploads', express.static(uploadsDir));
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -36,8 +54,9 @@ app.use('/api/user', userRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api', uploadRoutes);
 // app.use('/api/hostel',hostelRoutes);
-app.use('/api/auctions', auctionRoutes(io)); // Pass io instance to auction routes
+app.use('/api/auctions', auctionRoutes(io)); 
 
 app.get('/', (req, res) => {
   res.send('From backend');

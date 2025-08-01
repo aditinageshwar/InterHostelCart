@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {FaEnvelope, FaLock, FaUser, FaPhone, FaBuilding, FaCalendarAlt, FaBook} from "react-icons/fa";
 import axios from "axios";
 import Cookies from "js-cookie";
-import img from "../assets/login.jpeg";
+import img from "../assets/login.jpg";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -62,12 +62,14 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#F8F4E1] to-[#E8DFC7] min-h-screen">
-      <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
+    <div className="bg-stone-100 rounded-lg shadow-lg shadow-gray-500/70">
+      <div className="flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl mt-14 mb-32">
           <div className="flex flex-col md:flex-row">
             <div className="w-full md:w-1/2 p-10">
-              <h2 className="text-4xl font-bold text-[#543310] mb-8">Create Account</h2>
+              <h2 className="text-4xl font-bold bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent mb-8">
+                Create Account
+              </h2>
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <form onSubmit={handleSubmit} className="space-y-6">
                 {[
@@ -97,7 +99,8 @@ const Signup = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`w-full bg-[#74512D] text-white rounded-lg py-3 font-semibold transition duration-300 transform ${
+                  className={`w-full bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400 hover:from-sky-600 hover:via-cyan-500 hover:to-teal-500 shadow-lg
+                             text-white rounded-lg py-3 font-semibold transition duration-300 transform ${
                     loading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#543310] hover:scale-105"
                   }`}
                 >
@@ -107,14 +110,14 @@ const Signup = () => {
               <div className="mt-8 text-center">
                 <p className="text-sm text-gray-600">
                   Already have an account?
-                  <Link to="/login" className="ml-2 text-[#a78059] hover:underline font-semibold">
+                  <Link to="/login" className="ml-2 text-cyan-500 hover:underline focus:outline-none font-semibold">
                     Log In
                   </Link>
                 </p>
               </div>
             </div>
-            <div className="hidden md:block w-1/2">
-              <img src={img} alt="signup" className="object-cover w-full h-full" />
+            <div className="md:block w-1/2">
+              <img src={img} alt="signup" className="object-cover h-full" />
             </div>
           </div>
         </div>
