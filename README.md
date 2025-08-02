@@ -4,7 +4,7 @@ Title: Inter-Hostel Cart: Fostering Community and Convenience through Hostel-wid
 Tech Stack:
 
   - Frontend: HTML, CSS (Bootstrap + Tailwind),Javascript, React.js.
-  - Backend: Node.js, Express.js, OracleDB.
+  - Backend: Node.js, Express.js, MySQL.
 
 Description:
 Inter-Hostel Cart is a visionary project aimed at creating a dynamic marketplace within university hostels, facilitating seamless transactions between students residing within the same accommodation. The platform serves as a centralized hub where hostel dwellers can buy and sell various products, fostering a sense of community and enhancing convenience for all users.
@@ -23,6 +23,8 @@ Key Features:
 6. **Feedback and Ratings**: Users can provide feedback and ratings based on their transaction experiences, fostering transparency and trust within the hostel community.
 
 7. **Administrative Tools**: Admin features enable hostel management or designated moderators to oversee the platform, ensure compliance with guidelines, and address any issues promptly.
+
+8. **Auction and Bidding**: Sellers can host timed auctions; buyers place bids to win items.
 
 Benefits:
 - **Convenience**: Students can conveniently buy and sell items without leaving their hostel, saving time and effort.

@@ -42,17 +42,17 @@ const Item = {
   },
 
   getById: async (itemNO) => {
-    const sql = `SELECT * FROM item WHERE itemNO = ?`;
+    const sql = `SELECT i.*, u.* FROM item i JOIN usertable u ON i.sellerId = u.userID WHERE itemNO = ?`;
     const [rows] = await pool.query(sql, [itemNO]);
     return rows;
   },
 
-  reportItem: async ({ itemId }) => {
-    const [result] = await pool.query("SELECT reportflag FROM item WHERE itemNo = ?", [itemId]);
+  reportItem: async (itemNO) => {
+    const [result] = await pool.query("SELECT reportflag FROM item WHERE itemNO = ?", [itemNO]);
     if (result.length > 0 && result[0].reportflag) {
       return { message: 'Item has already been reported' };
     }
-    await pool.query("UPDATE item SET reportflag = true WHERE itemNo = ?", [itemId]);
+    await pool.query("UPDATE item SET reportflag = true WHERE itemNO = ?", [itemNO]);
     return { message: 'Item reported successfully' };
   },
 

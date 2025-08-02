@@ -240,7 +240,8 @@ const Auction = () => {
         <p className="text-md">End Time: <span className="font-semibold text-gray-800">{new Date(auction.endTime).toLocaleString()}</span></p>
       </div>
 
-      <div className="bg-stone-50 shadow-lg rounded-lg p-4 mb-6 border-2 border-stone-100">
+      {!isSeller && (
+       <div className="bg-stone-50 shadow-lg rounded-lg p-4 mb-6 border-2 border-stone-100">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Place a Bid</h2>
         <div className="flex items-center space-x-4">
           <input
@@ -262,7 +263,8 @@ const Auction = () => {
             Place Bid
           </button>
         </div>
-      </div>
+       </div>
+      )}
 
       {isSeller && (
         <div className="bg-stone-50 shadow-lg rounded-lg p-4 border-2 border-stone-100 mb-6">

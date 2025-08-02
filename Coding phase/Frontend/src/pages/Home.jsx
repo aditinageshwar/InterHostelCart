@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Animation from "../Components/Animation";
-import Deal from "./Deal"
+import Hero from "../Components/Hero";
+
 const Home = () => {
   const [loadingComplete, setLoadingComplete] = useState(false);
 
@@ -9,7 +10,9 @@ const Home = () => {
       {!loadingComplete ? (
         <Animation setLoadingComplete={setLoadingComplete} />
       ) : (
-          <Deal />     
+        <div>
+          <Hero />
+        </div>
       )}
     </>
   );

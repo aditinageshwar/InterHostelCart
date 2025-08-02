@@ -4,45 +4,58 @@ import { faComments, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addItem } from '../Redux/cartSlice';
 import Cookies from 'js-cookie';
 
 const Item = () => {
   const dispatch = useDispatch();
   const [item, setItem] = useState({});
-  const { itemid } = useParams();
+  const [userid, setUserid] = useState('');
+  const { itemNO } = useParams();
   const token = Cookies.get('token');
 
-  const fetchItem = async () => {
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!token) {
+        setError('Please sign in to report item or add to cart');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:3001/api/user/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUserid(response.data.user.userID);
+      } 
+      catch (error) {
+        console.error('Error fetching user:', error);
+        setError('Failed to fetch user profile');
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchItem = async () => {
     try {
-      const endpoint = `http://localhost:3001/api/items/great/atul/${itemid}`;
-      const response = await axios.get(endpoint);
-      setItem(response.data.rows[0]);
-      // console.log("item",item);
-      
+      const response = await axios.get(`http://localhost:3001/api/items/item/${itemNO}`);
+      setItem(response.data[0]);
     } catch (error) {
       console.error('Error fetching items:', error);
     }
-  };
-
-  useEffect(() => {
+   };
     fetchItem();
-  }, []);
+  }, [itemNO]);
 
   const handleChatClick = () => {
     alert('Chat with user say: hii');
   };
 
-  const handleReportClick = async () => {
-    if (!token) {
-      alert('Please sign in to report an item.');
-      return;
-    }
-
+  const handleReportClick = async () => { 
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/items/report',
-        { itemId: item.itemno },
+      const response = await axios.post('http://localhost:3001/api/items/report', { itemNO: item.itemNO },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,56 +70,40 @@ const Item = () => {
   };
 
   const handleAddToCart = async () => {
-    if (!token) {
-      alert('Please sign in to add items to the cart.');
-      return;
-    }
-
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/cart/add',
-        { itemId: item.itemno },
+      const response = await axios.post('http://localhost:3001/api/cart/add', { itemNO: item.itemNO, userID: userid },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: {Authorization: `Bearer ${token}`},
         }
       );
-      dispatch(addItem(item));
+      alert(response.data.message);
     } catch (error) {
       console.error('Error adding item to cart:', error);
       alert('Failed to add item to cart');
     }
   };
 
-  return (
-    <div className="bg-gray-100">
+    return (
       <div className="container mx-12 px-1 py-12">
         <div className="flex flex-wrap -mx-4">
-          {/* Product Images */}
-          <div className="w-full md:w-1/2 px-4 mb-8">
+          <div className="md:w-1/3 mb-8">
             <img
-              src={item.itemphotourl}
+              src={item.itemPhotoURL}
               alt="Product"
-              className="w-full h-auto rounded-lg shadow-md mb-4"
+              className="w-[70%] h-[70%] rounded-lg shadow-lg ml-24 mt-4"
               id="mainImage"
             />
           </div>
 
-          {/* Product Details */}
           <div className="w-full md:w-1/2 px-14">
-            <h2 className="text-3xl font-bold mb-2">{item.itemname}</h2>
-
-            <div className="mb-4">
-              <span className="text-2xl font-bold mr-2"> ₹ {item.itemprice}</span>
-              <span className="ml-6 text-lg font-semibold">Listing Date :{item.listingdate}</span>
-            </div>
-
-            <p className="text-gray-700 mb-6"> {item.itemdescription}</p>
-
+            <h2 className="text-2xl font-semibold text-gray-700">{item.itemName}</h2>
+            <p className="text-gray-700 mb-2"> {item.itemDescription}</p>
+            <p className="text-xl font-semibold text-gray-700"> MRP: ₹ {item.itemPrice}</p>
+            <p className="text-md font-semibold text-gray-700">Listing Date: {new Date(item.listingDate).toLocaleDateString("en-CA")}</p>
+           
             <div className="flex space-x-4 mb-6">
               <button
-                className="bg-indigo-600 flex gap-2 items-center text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="flex gap-2 items-center text-white mt-4 px-6 py-2 rounded-md bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400 hover:from-sky-600 hover:via-cyan-500 hover:to-teal-500 shadow-lg"
                 onClick={handleAddToCart}
               >
                 <svg
@@ -117,47 +114,63 @@ const Item = () => {
                   stroke="currentColor"
                   className="size-6"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                  />
+                 <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                 />
                 </svg>
                 Add to Cart
               </button>
             </div>
 
-            {/* Seller Section */}
+            {/* Seller Details Section */}
             <div className="pt-1">
-              <p className="underline text-lg">Seller Details</p>
-              <h3 className="text-xl font-bold mb-2">{item.username}</h3>
-              <p className="text-gray-800">Hostel No: {item.hostelno}</p>
-              <p className="text-gray-800">Room No: {item.roomno}</p>
-              <p className="text-gray-800">Course: {item.usercourse}</p>
+              <p className="underline text-2xl text-bold text-cyan-800">Seller Details</p>
+              <p className="text-xl font-semibold text-gray-700 mt-2">{item.userName}</p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Mobile No: </span> 
+                {item.userPhoneNo}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Hostel No: </span> 
+                {item.hostelNo}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Room No: </span> 
+                {item.roomNo}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Dept: </span> 
+                {item.userDept}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Course: </span> 
+                {item.userCourse}
+              </p>
 
               <div className="mt-4 flex space-x-4">
                 <button
                   onClick={handleChatClick}
-                  className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
                 >
                   <FontAwesomeIcon icon={faComments} className="mr-2" />
                   Chat
                 </button>
-
                 <button
                   onClick={handleReportClick}
-                  className="flex items-center px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  className="flex items-center px-3 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700"
                 >
                   <FontAwesomeIcon icon={faFlag} className="mr-2" />
                   Report
                 </button>
               </div>
             </div>
+
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default Item;

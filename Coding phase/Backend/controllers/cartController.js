@@ -2,10 +2,9 @@ const Cart = require('../models/cartModel');
 
 const cartController = {
   addItemToCart: async (req, res) => {
-    const userId = req.user.userId;
-    const { itemId, quantity } = req.body;
+    const { itemNO, userID } = req.body;
     try {
-      await Cart.addItem(userId, itemId); 
+      await Cart.addItem(itemNO, userID); 
       res.status(201).json({ message: 'Item added to cart successfully' });
     } 
     catch (err) {
@@ -15,9 +14,9 @@ const cartController = {
   },
 
   getCartItems: async (req, res) => {
-    const userId = req.user.userId;
+    const userID = req.user.userId;                       //from login credentials
     try {
-      const items = await Cart.findByUserId(userId);
+      const items = await Cart.findByUserId(userID);
       res.status(200).json(items);
     } 
     catch (err) {
@@ -27,10 +26,10 @@ const cartController = {
   },
 
   removeItemFromCart: async (req, res) => {
-    const userId = req.user.userId;
-    const { itemId } = req.body;
+    const userID = req.user.userId;
+    const { itemNO } = req.body;
     try {
-      await Cart.removeItem(userId, itemId);
+      await Cart.removeItem(itemNO, userID);
       res.status(200).json({ message: 'Item removed from cart successfully' });
     } 
     catch (err) {

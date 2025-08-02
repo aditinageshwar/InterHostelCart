@@ -12,21 +12,17 @@ const Order = {
     }
   },
 
-  // Retrieve all orders for a specific user
   findByUserId: async (userId) => {
     try {
       const sqlSelect = `
         SELECT 
           item.*, 
-          usertable.username, 
-          usertable.hostelno, 
-          usertable.roomno, 
-          usertable.userdept, 
-          usertable.usercourse 
-        FROM orderhistory
-        JOIN item ON orderhistory.itemno = item.itemno
-        JOIN usertable ON orderhistory.sellerid = usertable.userid
-        WHERE orderhistory.buyerid = ?
+          usertable.*, 
+          orderHistory.*
+        FROM orderHistory
+        JOIN item ON orderHistory.itemNO = item.itemNO
+        JOIN usertable ON orderHistory.sellerId = usertable.userID
+        WHERE orderHistory.buyerId = ?
       `;
       const [rows] = await pool.query(sqlSelect, [userId]);
       return rows;

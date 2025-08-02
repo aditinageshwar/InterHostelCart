@@ -107,8 +107,8 @@ useEffect(() => {
     );
   }, []);
 
-  const handleDivClick = (itemid) => {
-    navigate(`/item/${itemid}`);
+  const handleDivClick = (itemNO) => {
+    navigate(`/item/${itemNO}`);
   };
 
   return (

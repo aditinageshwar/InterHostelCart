@@ -1,16 +1,14 @@
 const pool = require('../config/db');
 
 const Cart = {
-  // Retrieve all items in the cart for a specific user
-  findByUserId: async (userId) => {
+  findByUserId: async (userID) => {
     try {
       const sqlSelect = `
-        SELECT cart.*, item.itemname, item.itemprice, item.itemphotourl
-        FROM cart
-        JOIN item ON cart.itemno = item.itemno
-        WHERE cart.buyerid = ?
+        SELECT wishlist.*, item.*
+        FROM wishlist JOIN item ON wishlist.itemNO = item.itemNO
+        WHERE wishlist.buyerId = ?
       `;
-      const [rows] = await pool.query(sqlSelect, [userId]);
+      const [rows] = await pool.query(sqlSelect, [userID]);
       return rows;
     } 
     catch (error) {
@@ -18,14 +16,10 @@ const Cart = {
     }
   },
 
-  // Add an item to the cart
-  addItem: async (userId, itemId) => {
+  addItem: async (itemNO, userID) => {
     try {
-      const sqlInsert = `
-        INSERT INTO cart (buyerid, itemno)
-        VALUES (?, ?)
-      `;
-      const [result] = await pool.query(sqlInsert, [userId, itemId]);
+      const sqlInsert = `INSERT INTO wishlist (itemNO, buyerId) VALUES (?, ?)`;
+      const [result] = await pool.query(sqlInsert, [itemNO, userID]);
       return result;
     } 
     catch (error) {
@@ -33,11 +27,10 @@ const Cart = {
     }
   },
 
-  // Remove an item from the cart
-  removeItem: async (userId, itemId) => {
+  removeItem: async (itemNO, userID) => {
     try {
-      const sqlDelete = "DELETE FROM cart WHERE buyerid = ? AND itemno = ?";
-      const [result] = await pool.query(sqlDelete, [userId, itemId]);
+      const sqlDelete = "DELETE FROM wishlist WHERE itemNO = ? AND buyerId = ?";
+      const [result] = await pool.query(sqlDelete, [itemNO, userID]);
       return result;
     } 
     catch (error) {

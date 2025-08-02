@@ -117,10 +117,8 @@ const Orders = () => {
         });
         setOrders(response.data.orders);        
         setLoading(false);
-        console.log("orders",orders);
-
-      } catch (error) {
-        console.error('Error fetching orders:', error);
+      } 
+      catch (error) {
         setError('Failed to fetch orders');
         setLoading(false);
       }

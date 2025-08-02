@@ -97,9 +97,9 @@ getItemsByHostel: async (req, res) => {
   },
 
   reportItem: async (req, res) => {
-    const { itemId } = req.body;
+    const { itemNO } = req.body;
     try {
-      const result = await Item.reportItem(itemId);
+      const result = await Item.reportItem(itemNO);
       res.status(200).json(result);
     } catch (err) {
       console.error('Error reporting item:', err);

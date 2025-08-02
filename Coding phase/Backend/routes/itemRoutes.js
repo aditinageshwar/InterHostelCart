@@ -10,8 +10,8 @@ router.get('/hostel/:hostelNo',itemController.getItemsByHostel);
 router.get('/:tag',itemController.getItemsByTag);
 router.put('/item/:id', itemController.removeItem);
 router.get('/item/:id',itemController.getItemById);
+router.post('/report',authenticateToken, itemController.reportItem);
 
 router.get('/:gender/:id', itemController.getItemsByGenderAndSeller);
-router.post('/report',authenticateToken ,itemController.reportItem);
 
 module.exports = router;
