@@ -7,10 +7,11 @@ router.get('/', itemController.getAllItems);
 router.post('/', itemController.createItem);
 router.get('/gender/:gender', itemController.getItemsByGender);
 router.get('/hostel/:hostelNo',itemController.getItemsByHostel);
-router.get('/:gender/:id', itemController.getItemsByGenderAndSeller);
 router.get('/:tag',itemController.getItemsByTag);
-router.get('/great/atul/:id',itemController.getItemById);
+router.put('/item/:id', itemController.removeItem);
+router.get('/item/:id',itemController.getItemById);
+
+router.get('/:gender/:id', itemController.getItemsByGenderAndSeller);
 router.post('/report',authenticateToken ,itemController.reportItem);
-router.put('/report/item/atul/:id', itemController.removeItem);
 
 module.exports = router;

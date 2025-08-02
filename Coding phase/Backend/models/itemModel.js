@@ -41,20 +41,9 @@ const Item = {
     return rows;
   },
 
-  getById: async ({ id }) => {
-    const sql = `
-      SELECT 
-        item.*, 
-        usertable.username, 
-        usertable.hostelno, 
-        usertable.roomno, 
-        usertable.userdept, 
-        usertable.usercourse 
-      FROM item 
-      JOIN usertable ON item.sellerID = usertable.userID 
-      WHERE item.itemNo = ?
-    `;
-    const [rows] = await pool.query(sql, [id]);
+  getById: async (itemNO) => {
+    const sql = `SELECT * FROM item WHERE itemNO = ?`;
+    const [rows] = await pool.query(sql, [itemNO]);
     return rows;
   },
 
@@ -67,8 +56,8 @@ const Item = {
     return { message: 'Item reported successfully' };
   },
 
-  removeById: async ({ id }) => {
-    const [result] = await pool.query("DELETE FROM item WHERE itemNo = ?", [id]);
+  removeById: async (itemNO) => {
+    const [result] = await pool.query("DELETE FROM item WHERE itemNO = ?", [itemNO]);
     return result;
   }
 };

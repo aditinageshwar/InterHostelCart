@@ -86,9 +86,9 @@ getItemsByHostel: async (req, res) => {
   },
 
   getItemById: async (req, res) => {
-    const id = req.params;
+    const itemNO = req.params;
     try {
-      const result = await Item.getById(id.id);
+      const result = await Item.getById(itemNO.id);
       res.send(result);
     } catch (err) {
       console.error('Error executing query:', err);
@@ -108,9 +108,9 @@ getItemsByHostel: async (req, res) => {
   },
 
   removeItem: async (req, res) => {
-    const id = req.params;
+    const itemNO = req.params;
     try {
-      await Item.removeById(id.id);
+      await Item.removeById(itemNO.id);
       res.status(201).json({ message: 'Item removed successfully' });
     } catch (err) {
       console.error('Error executing query:', err);

@@ -15,8 +15,8 @@ const pool = mysql.createPool({
 
 const sqlDir = path.join(__dirname, '../../Database');
 const files = [
-  'user.sql', 'item.sql', 'orderHistory.sql', 'soldHistory.sql',
-  'wishlist.sql', 'chatService.sql', 'transaction.sql', 'queries.sql'
+  'user.sql', 'item.sql', 'orderHistory.sql', 'soldHistory.sql', 'wishlist.sql', 
+  'chatService.sql', 'transaction.sql', 'auctions.sql', 'bids.sql', 'queries.sql'
 ];
 
 (async () => {

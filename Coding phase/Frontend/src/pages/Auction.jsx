@@ -3,21 +3,20 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import io from 'socket.io-client';
-
-const socket = io('http://localhost:3001'); // Replace with your backend's URL
+const socket = io('http://localhost:3001'); 
 
 const Auction = () => {
   const location = useLocation();
-  const { itemno } = location.state || {};
-  
+  const { itemNO } = location.state || {};
   const navigate = useNavigate();
+  const [userid, setUserId] = useState(null);
+  const token = Cookies.get('token');
+
   const [auction, setAuction] = useState({});
   const [bids, setBids] = useState([]);
   const [bidAmount, setBidAmount] = useState('');
   const [isSeller, setIsSeller] = useState(false);
-  const [userId, setUserId] = useState(null);
-  const token = Cookies.get('token');
-
+  
   useEffect(() => {
     const fetchProfile = async () => {
       if (!token) {
@@ -31,7 +30,7 @@ const Auction = () => {
             authorization: `Bearer ${token}`
           }
         });
-        setUserId(response.data.user.userid);
+        setUserId(response.data.user.userID);
       } catch (error) {
         console.error('Error fetching user:', error);
       }
@@ -41,39 +40,29 @@ const Auction = () => {
   }, [token]);
 
   useEffect(() => {
-    const fetchAuction = async (auctionId) => {
+    const fetchAuctionId = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/auctions/${auctionId}`);
-        setAuction(response.data.auction);
-      } catch (error) {
-        console.error('Error fetching auction:', error);
-      }
-    };
-
-    const fetchBids = async (auctionId) => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/auctions/${auctionId}/bids`);
-        setBids(response.data.bids);
-      } catch (error) {
-        console.error('Error fetching bids:', error);
+        const response = await axios.get(`http://localhost:3001/api/auctions/item/${itemNO}`);
+        const auctionId = response.data.auctionId;
+        fetchAuction(auctionId);
+        fetchBids(auctionId);
+        socket.emit('joinAuction', auctionId);
+      } 
+      catch (error) 
+      {
+        if (error.response && error.response.status === 404) {
+          createAuction();
+        } 
+        else {
+          console.error('Error fetching auction ID:', error);
+        }
       }
     };
 
     const createAuction = async () => {
-      try {
-        // Fetch item details to get the item price
-        const itemResponse = await axios.get(`http://localhost:3001/api/items/great/atul/${itemno}`);
-        const item = itemResponse.data.rows[0];
-        // console.log(item.data,"yes");
-        const startingBid = item.itemprice;
-        const endTime = new Date();
-        endTime.setDate(endTime.getDate() + 7); // Set end time to 7 days from now
-        console.log(endTime);
-        
-
-        const response = await axios.post(
-          'http://localhost:3001/api/auctions/create',
-          { itemId: itemno, startingBid, endTime: endTime.toISOString() },
+      try 
+      {
+        const response = await axios.post('http://localhost:3001/api/auctions/create', {itemNO},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -83,42 +72,56 @@ const Auction = () => {
         setAuction(response.data.auction);
         fetchBids(response.data.auction.auctionId);
         socket.emit('joinAuction', response.data.auction.auctionId);
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error creating auction:', error);
       }
     };
-
-    const fetchAuctionId = async () => {
+    
+    const fetchAuction = async (auctionId) => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/auctions/item/${itemno}`);
-        const auctionId = response.data.auctionId;
-        fetchAuction(auctionId);
-        fetchBids(auctionId);
-        socket.emit('joinAuction', auctionId);
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          createAuction();
-        } else {
-          console.error('Error fetching auction ID:', error);
-        }
+        const response = await axios.get(`http://localhost:3001/api/auctions/${auctionId}`);
+        setAuction(response.data.auction);
+      } 
+      catch (error) {
+        console.error('Error fetching auction:', error);
+      }
+    };
+
+    const fetchBids = async (auctionId) => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/auctions/${auctionId}/bids`);
+        setBids(response.data.bids);
+      } 
+      catch (error) {
+        console.error('Error fetching bids:', error);
       }
     };
 
     const checkIfSeller = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/items/great/atul/${itemno}`);
-        const item = response.data.rows[0];
-        if (item && item.sellerid === userId) {
-          setIsSeller(true);
-        } else {
+        const response = await axios.get(`http://localhost:3001/api/items/item/${itemNO}`);
+        const items = response.data;
+
+        if (Array.isArray(items) && items.length > 0) 
+        {
+          const item = items[0];
+          if (item.sellerId === userid) {
+            setIsSeller(true);
+          } else {
+            setIsSeller(false);
+          }
+        } 
+        else {
           setIsSeller(false);
         }
       } catch (error) {
         console.error('Error checking if user is seller:', error);
+        setIsSeller(false);
       }
     };
 
-    if (userId) {
+    if (userid) {
       fetchAuctionId();
       checkIfSeller();
     }
@@ -128,7 +131,7 @@ const Auction = () => {
     });
 
     socket.on('auctionEnded', (data) => {
-      if (data.winnerId !== userId) {
+      if (data.winnerId !== userid) {
         alert('The auction has ended.');
         navigate('/');
       }
@@ -138,26 +141,8 @@ const Auction = () => {
       socket.off('newBid');
       socket.off('auctionEnded');
     };
-  }, [itemno, token, userId, navigate]);
-
-  useEffect(() => {
-    const checkAuctionEnd = async () => {
-      if (auction.endtime && new Date(auction.endtime) < new Date()) {
-        const highestBid = bids[0];
-        if (highestBid) {
-          if (highestBid.userid === userId) {
-            alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidamount}`);
-            navigate('/orders', { state: { itemno, bidAmount: highestBid.bidamount } });
-          } else {
-            socket.emit('auctionEnded', { winnerId: highestBid.userid });
-          }
-        }
-      }
-    };
-
-    checkAuctionEnd();
-  }, [auction, bids, userId, navigate, itemno]);
-
+  }, [itemNO, token, userid, navigate]);
+  
   const handleBid = async () => {
     if (!token) {
       alert('Please sign in to place a bid.');
@@ -165,9 +150,7 @@ const Auction = () => {
     }
 
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/auctions/new/bid',
-        { auctionId: auction.auctionid, userId, bidAmount },
+      const response = await axios.post('http://localhost:3001/api/auctions/new/bid', { auctionId: auction.auctionId, userid, bidAmount },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -176,7 +159,8 @@ const Auction = () => {
       );
       alert(response.data.message);
       setBidAmount('');
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error placing bid:', error);
       alert('Failed to place bid');
     }
@@ -188,44 +172,92 @@ const Auction = () => {
       return;
     }
 
-    try {
-      const response = await axios.post(
-        'http://localhost:3001/api/auctions/stop',
-        { auctionId: auction.auctionid },
+    try 
+    {
+      const response = await axios.post('http://localhost:3001/api/auctions/stop', { auctionId: auction.auctionId },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}`,},
         }
       );
-      alert(response.data.message);
-    } catch (error) {
+      const highestBid = response.data.order;
+      if (highestBid) 
+      {
+        const confirmSale = window.confirm(`Highest bid is ₹${highestBid.bidAmount}. Do you want to sell the item to this bidder?`);
+        if (confirmSale) {
+          if (highestBid.userID === userid) {
+            alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidAmount}`);
+            navigate('/orders', { state: { itemNO, bidAmount: highestBid.bidAmount } });
+          } else {
+            socket.emit('auctionEnded', { winnerId: highestBid.userID });
+          }
+          alert('Auction stopped. Item sold to highest bidder.');
+        }
+        else {
+          alert('Auction stopped. No sale was made.');
+        }
+      }
+    }
+    catch (error) {
       console.error('Error stopping auction:', error);
       alert('Failed to stop auction');
     }
   };
 
+  // Aution automatically ends after endTime
+  useEffect(() => {
+    const checkAuctionEnd = async () => {
+      if (auction.endTime && new Date(auction.endTime) < new Date()) 
+      {
+        const response = await axios.post('http://localhost:3001/api/auctions/stop', { auctionId: auction.auctionId },
+         {
+           headers: { Authorization: `Bearer ${token}`,},
+         }
+        );
+        const highestBid = response.data.order;
+        if (highestBid) 
+        {
+          if (highestBid.userID === userid) {
+            alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidAmount}`);
+            navigate('/orders', { state: { itemNO, bidAmount: highestBid.bidAmount } });
+          } else {
+            socket.emit('auctionEnded', { winnerId: highestBid.userID });
+          }
+        }
+      }
+    };
+
+    checkAuctionEnd();
+  }, [auction, bids, userid, navigate, itemNO]);
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Auction for Item: {auction.itemId}</h1>
-      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <p className="text-lg">Starting Bid: <span className="font-semibold">{auction.startingbid}</span></p>
-        <p className="text-lg">End Time: <span className="font-semibold">{new Date(auction.endtime).toLocaleString()}</span></p>
+      <h2 className="text-2xl text-center font-bold bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent mb-4">
+        Your Sale Listings
+      </h2>
+      <h1 className="text-2xl font-semibold text-gray-700 mb-4">Auction for Item:</h1>
+      <div className="bg-stone-50 shadow-lg rounded-lg p-4 mb-6 border-2 border-stone-100">
+        <p className="text-md">Starting Bid: <span className="font-semibold text-gray-800">{Number(auction.startingBid)}</span></p>
+        <p className="text-md">End Time: <span className="font-semibold text-gray-800">{new Date(auction.endTime).toLocaleString()}</span></p>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-2xl font-bold mb-4">Place a Bid</h2>
+      <div className="bg-stone-50 shadow-lg rounded-lg p-4 mb-6 border-2 border-stone-100">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Place a Bid</h2>
         <div className="flex items-center space-x-4">
           <input
             type="number"
+            min={auction.startingBid}
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
-            placeholder="Enter your bid"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder={`Enter ₹${auction.startingBid} or more`}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${bidAmount && Number(bidAmount) < auction.startingBid? 
+                      "focus:ring-rose-500" : "focus:ring-cyan-500"}`}
           />
+          {bidAmount && Number(bidAmount) < auction.startingBid && (
+            <p className="text-rose-500 text-sm mt-1"> Bid must be atleast ₹{auction.startingBid} </p>
+          )}
           <button
             onClick={handleBid}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            className="bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400 hover:from-sky-600 hover:via-cyan-500 hover:to-teal-500 shadow-lg text-white max-h-11 px-4 rounded-lg"
           >
             Place Bid
           </button>
@@ -233,33 +265,38 @@ const Auction = () => {
       </div>
 
       {isSeller && (
-        <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-          <h2 className="text-2xl font-bold mb-4">Seller Actions</h2>
-          <button
-            onClick={handleStopAuction}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-          >
-            Stop Auction
-          </button>
+        <div className="bg-stone-50 shadow-lg rounded-lg p-4 border-2 border-stone-100 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Seller Actions</h2>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-gray-600 text-sm">
+              You can stop the auction if the item is no longer available or sold.
+            </p>
+            <button
+              onClick={handleStopAuction}
+              className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 text-md"
+            >
+              Stop Auction
+            </button>
+          </div>
         </div>
       )}
 
-      <div className="bg-white shadow-md rounded-lg p-4">
-        <h2 className="text-2xl font-bold mb-4">Bids</h2>
+      <div className="bg-stone-50 shadow-lg rounded-lg p-4 border-2 border-stone-100 mb-14">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Bids</h2>
         <table className="min-w-full bg-white">
           <thead>
             <tr>
-              <th className="py-2">User ID</th>
-              <th className="py-2">Bid Amount</th>
-              <th className="py-2">Bid Time</th>
+              <th className="py-2 text-gray-700">User ID</th>
+              <th className="py-2 text-gray-700">Bid Amount</th>
+              <th className="py-2 text-gray-700">Bid Time</th>
             </tr>
           </thead>
           <tbody>
-            {bids.map((bid) => (
-              <tr key={bid.bidId} className="border-t">
-                <td className="py-2 text-center">{bid.userid}</td>
-                <td className="py-2 text-center">{bid.bidamount}</td>
-                <td className="py-2 text-center">{new Date(bid.bidtime).toLocaleString()}</td>
+            {bids.map((bid, index) => (
+              <tr key={bid.bidId} className={`border-t ${index % 2 === 0 ? 'bg-cyan-50' : 'bg-sky-50'}`}>
+                <td className="py-2 text-center">{bid.userID}</td>
+                <td className="py-2 text-center">{bid.bidAmount}</td>
+                <td className="py-2 text-center">{new Date(bid.bidTime).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
