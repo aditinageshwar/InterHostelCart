@@ -12,7 +12,5 @@ module.exports = (io) => {
   router.post('/new/bid', authenticateToken, auctionController.placeBid);
   router.post('/stop', authenticateToken, auctionController.stopAuction);
 
-  // router.get('/:auctionId/highestBid', auctionController.getHighestBid);
- 
   return router;
 };

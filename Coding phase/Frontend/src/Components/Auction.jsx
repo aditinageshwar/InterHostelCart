@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -184,11 +184,11 @@ const Auction = () => {
       {
         const confirmSale = window.confirm(`Highest bid is ₹${highestBid.bidAmount}. Do you want to sell the item to this bidder?`);
         if (confirmSale) {
-          if (highestBid.userID === userid) {
+          if (highestBid.buyerId === userid) {
             alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidAmount}`);
-            navigate('/orders', { state: { itemNO, bidAmount: highestBid.bidAmount } });
+            navigate('/orders');
           } else {
-            socket.emit('auctionEnded', { winnerId: highestBid.userID });
+            socket.emit('auctionEnded', { winnerId: highestBid.buyerId });
           }
           alert('Auction stopped. Item sold to highest bidder.');
         }
@@ -216,11 +216,11 @@ const Auction = () => {
         const highestBid = response.data.order;
         if (highestBid) 
         {
-          if (highestBid.userID === userid) {
+          if (highestBid.buyerId === userid) {
             alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidAmount}`);
-            navigate('/orders', { state: { itemNO, bidAmount: highestBid.bidAmount } });
+            navigate('/orders');
           } else {
-            socket.emit('auctionEnded', { winnerId: highestBid.userID });
+            socket.emit('auctionEnded', { winnerId: highestBid.buyerId });
           }
         }
       }

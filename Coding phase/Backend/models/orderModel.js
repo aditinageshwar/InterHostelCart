@@ -1,10 +1,10 @@
 const pool = require('../config/db');
 
 const Order = {
-  create: async (sellerId, buyerId, itemno, totalAmount) => {
+  create: async (buyerId, itemNO, sellerId, totalamount) => {
     try {
-      const sqlInsert = `INSERT INTO orderhistory (buyerid, sellerid, itemno, totalamount, orderdate, status) VALUES (?, ?, ?, ?, NOW(), 'placed')`;
-      const [result] = await pool.query(sqlInsert, [buyerId, sellerId, itemno, totalAmount]);
+      const sqlInsert = `INSERT INTO orderHistory (buyerId, itemNO, sellerId, orderDate, status, totalamount) VALUES (?, ?, ?, NOW(), 'Done', ?)`;
+      const [result] = await pool.query(sqlInsert, [buyerId, itemNO, sellerId, totalamount]);
       return result;
     } 
     catch (err) {
@@ -12,18 +12,16 @@ const Order = {
     }
   },
 
-  findByUserId: async (userId) => {
+  findBySellerId: async (userId) => {
     try {
-      const sqlSelect = `
-        SELECT 
-          item.*, 
-          usertable.*, 
-          orderHistory.*
+      const sqlSelect = `SELECT 
+        item.*, 
+        usertable.*, 
+        orderHistory.*
         FROM orderHistory
-        JOIN item ON orderHistory.itemNO = item.itemNO
-        JOIN usertable ON orderHistory.sellerId = usertable.userID
-        WHERE orderHistory.buyerId = ?
-      `;
+        INNER JOIN item ON orderHistory.itemNO = item.itemNO
+        INNER JOIN usertable ON orderHistory.buyerId = usertable.userID
+        WHERE orderHistory.sellerId = ?`;
       const [rows] = await pool.query(sqlSelect, [userId]);
       return rows;
     } 
@@ -32,13 +30,20 @@ const Order = {
     }
   },
 
-  // Retrieve a specific order by order ID
-  findById: async (orderId) => {
+  findByBuyerId: async (userId) => {
     try {
-      const sqlSelect = "SELECT * FROM orderhistory WHERE orderID = ?";
-      const [rows] = await pool.query(sqlSelect, [orderId]);
+      const sqlSelect = `SELECT 
+        item.*, 
+        usertable.*, 
+        orderHistory.*
+        FROM orderHistory
+        INNER JOIN item ON orderHistory.itemNO = item.itemNO
+        INNER JOIN usertable ON orderHistory.sellerId = usertable.userID
+        WHERE orderHistory.buyerId = ?`;
+      const [rows] = await pool.query(sqlSelect, [userId]);
       return rows;
-    } catch (err) {
+    } 
+    catch (err) {
       throw err;
     }
   }

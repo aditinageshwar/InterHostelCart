@@ -1,14 +1,11 @@
-import React from 'react';
 import { Search, ShoppingCart, ChevronDown } from 'lucide-react';
 import  { useState } from 'react';
 import { NavLink,Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
-import { useSelector } from 'react-redux';
 
 const Navbar = () => 
 {
-  const totalAmount = useSelector(state => state.cart.totalAmount);
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const token = Cookies.get("token");
@@ -37,7 +34,7 @@ const Navbar = () =>
         <div className="  flex justify-between items-center  px-20 py-4 border-t border-b border-gray-200">
           <div className="text-2xl font-bold text-rose-400">InterHostel Cart</div>
             <div className="flex items-center space-x-4">
-              <select className="border rounded-full px-2 py-1">
+              <select className="text-gray-700 border rounded-full px-2 py-1">
                 <option>All Categories</option>
               </select>
               <div className="relative">
@@ -62,12 +59,11 @@ const Navbar = () =>
               )}
               <Link to="/mycart" className="flex items-center hover:text-gray-600">
                 <ShoppingCart className="w-5 h-5 mr-1"/>
-                MY CART:
-                <span className="font-bold ml-1"> ₹{totalAmount}</span>
+                MY CART
               </Link>
 
               <div className="flex items-center">
-                <img src="https://www.svgrepo.com/show/530412/user.svg" alt="User Logo"
+                <img src="https://tse4.mm.bing.net/th/id/OIP.9kksv3x3Tk_A7y0qNOg6dAHaHa?pid=Api&P=0&h=180" alt="User Logo"
                   className="w-10 h-10 rounded-full mr-"
                   onClick={() => setShowMenu(prev => !prev)}
                 />
@@ -78,37 +74,37 @@ const Navbar = () =>
               <ul>
                <li>
                 <NavLink to="/profile"
-                  className="block py-2 px-4 hover:bg-gray-100"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
                   onClick={() => setShowMenu(false)}>
                   Profile
                 </NavLink>
                </li>
                <li>
                 <NavLink to="/additem"
-                  className="block py-2 px-4 hover:bg-gray-100"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
                   onClick={() => setShowMenu(false)}>
-                  Add Item
+                  Sell Item
                 </NavLink>
                </li>
                <li>
                 <NavLink to="/myitem"
-                  className="block py-2 px-4 hover:bg-gray-100"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
                   onClick={() => setShowMenu(false)}>
-                  My Items
-                </NavLink>
-               </li>
-               <li>
-                <NavLink to="/payment"
-                  className="block py-2 px-4 hover:bg-gray-100"
-                  onClick={() => setShowMenu(false)}>
-                  Payment
+                  My Listings
                 </NavLink>
                </li>
                <li>
                 <NavLink to="/orders"
-                  className="block py-2 px-4 hover:bg-gray-100"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
                   onClick={() => setShowMenu(false)}>
-                  Orders
+                  Order History
+                </NavLink>
+               </li>
+               <li>
+                <NavLink to="/payment"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
+                  onClick={() => setShowMenu(false)}>
+                  Payment
                 </NavLink>
                </li>
                </ul>
@@ -123,35 +119,35 @@ const Navbar = () =>
             CATEGORIES
           </div>
           <div className="flex space-x-6 items-center ml-6">
-            <Link to="/" className="hover:text-gray-600">HOME</Link>
+            <Link to="/" className="hover:scale-105">HOME</Link>
             <select name="hostel" className=" bg-cyan-700" onChange={handleHostelChange} defaultValue="" >
               <option value="">Hostel</option>
-              <option value="/1" >Hostel:1</option>
-              <option value="/2"  >Hostel:2</option>
-              <option value="/3"  >Hostel:3</option>
-              <option value="/4"  >Hostel:4</option>
-              <option value="/5"  >Hostel:5</option>
-              <option value="/6"  >Hostel:6</option>
-              <option value="/7"  >Hostel:7</option>
-              <option value="/8"  >Hostel:8</option>
-              <option value="/9"  >Hostel:9</option>
-              <option value="/10"  >Hostel:10</option>
-              <option value="/11"  >Hostel:11</option>
-              <option value="/12"  >Hostel:12</option>
+              <option value="/1" className="bg-white text-black">Hostel:1</option>
+              <option value="/2" className="bg-white text-black">Hostel:2</option>
+              <option value="/3" className="bg-white text-black">Hostel:3</option>
+              <option value="/4" className="bg-white text-black">Hostel:4</option>
+              <option value="/5" className="bg-white text-black">Hostel:5</option>
+              <option value="/6" className="bg-white text-black">Hostel:6</option>
+              <option value="/7" className="bg-white text-black">Hostel:7</option>
+              <option value="/8" className="bg-white text-black">Hostel:8</option>
+              <option value="/9" className="bg-white text-black">Hostel:9</option>
+              <option value="/10" className="bg-white text-black">Hostel:10</option>
+              <option value="/11" className="bg-white text-black">Hostel:11</option>
+              <option value="/12" className="bg-white text-black">Hostel:12</option>
             </select>
 
             <select name="collection" className="bg-cyan-700" onChange={handleSelectChange} defaultValue="" >
               <option value="">Clothing</option>
-              <option value="/mens" >MEN</option>
-              <option value="/womens"  >WOMEN</option>
+              <option value="/mens" className="bg-white text-black">MEN</option>
+              <option value="/womens" className="bg-white text-black">WOMEN</option>
             </select>
                    
-            <Link to="/electronics" className="hover:text-gray-600">Electronics</Link>
-            <Link to="/stationary" className="hover:text-gray-600">Stationary</Link>
-            <Link to="/vehicle" className="hover:text-gray-600">Vehicle</Link>
-            <Link to="/sport" className="hover:text-gray-600">Sport</Link>
-            <Link to="/medicine" className="hover:text-gray-600">Medicine</Link>
-            <Link to="/accessories" className="hover:text-gray-600">Accessories</Link>     
+            <Link to="/electronics" className="hover:scale-105">Electronics</Link>
+            <Link to="/stationary" className="hover:scale-105">Stationary</Link>
+            <Link to="/vehicle" className="hover:scale-105">Vehicle</Link>
+            <Link to="/sport" className="hover:scale-105">Sport</Link>
+            <Link to="/medicine" className="hover:scale-105">Medicine</Link>
+            <Link to="/accessories" className="hover:scale-105">Accessories</Link>     
           </div>
         </div>
       </div>

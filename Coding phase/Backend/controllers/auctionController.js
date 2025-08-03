@@ -73,18 +73,16 @@ const auctionController = (io) => ({
       if (!highestBid) {
         return res.status(400).json({ error: "No bids placed on this auction" });
       }
-         
       const order = await Order.create(
-        highestBid.sellerId,
         highestBid.userID,
         highestBid.itemNO,
+        highestBid.sellerId,      
         highestBid.bidAmount
       );
 
       res.status(201).json({
         message: "Auction stopped and order created successfully",
         order: {
-          orderId: order.insertId,
           sellerId: highestBid.sellerId,
           buyerId: highestBid.userID,
           itemNO: highestBid.itemNO,

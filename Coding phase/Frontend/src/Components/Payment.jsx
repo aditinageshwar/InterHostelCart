@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { FaCcVisa, FaCcMastercard } from 'react-icons/fa';
+import { useState } from 'react';
 import { AiOutlineCreditCard } from 'react-icons/ai';
-// import { IoLogoPaypal } from 'react-icons/io';
 import { SiGooglepay, SiPhonepe } from 'react-icons/si';
 import { RiPaypalLine } from 'react-icons/ri';
 
@@ -13,7 +11,6 @@ const Payment = () => {
   // Handle OTP submission
   const handleOtpSubmit = (e) => {
     e.preventDefault();
-    // Perform OTP verification here
     alert('OTP submitted: ' + otp);
   };
 

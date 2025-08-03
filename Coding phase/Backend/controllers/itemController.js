@@ -52,21 +52,21 @@ const itemController = {
   }
 },
 
-getItemsByHostel: async (req, res) => {
-  const { hostelNo } = req.params;
-  try {
-    const result = await Item.getByHostel(hostelNo);
-    res.send(result);
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).json({ error: err.message });
-  }
-},
-
-  getItemsByGenderAndSeller: async (req, res) => {
-    const { gender, id } = req.params;
+  getItemsByName: async (req, res) => {
+    const { itemName } = req.params;
     try {
-      const result = await Item.getByGenderAndSeller(gender, id);
+      const result = await Item.getByName(itemName);
+      res.send(result);
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  getItemsByHostel: async (req, res) => {
+    const { hostelNo } = req.params;
+    try {
+      const result = await Item.getByHostel(hostelNo);
       res.send(result);
     } catch (err) {
       console.error('Error executing query:', err);

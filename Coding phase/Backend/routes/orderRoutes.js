@@ -3,8 +3,7 @@ const router = express.Router();
 const orderController = require('../controllers/orderController');
 const authenticateToken = require('../middleware/authMiddleware');
 
-router.post('/create', authenticateToken, orderController.createOrder);
-router.get('/', authenticateToken, orderController.getUserOrders);
-router.get('/:id', authenticateToken, orderController.getOrderById);
+router.get('/seller', authenticateToken, orderController.getOrderBySellerId);
+router.get('/buyer', authenticateToken, orderController.getOrderByBuyerId);
 
 module.exports = router;

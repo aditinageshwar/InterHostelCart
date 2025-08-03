@@ -9,10 +9,10 @@ const Footer = () => {
           <h5 className="text-lg font-semibold mb-2 text-gray-100">Important Links</h5>
           <ul className="space-y-2">
             <li><Link to="/" className="text-gray-300 hover:text-gray-100">Home</Link></li>
-            <li><Link to="#" className="text-gray-300 hover:text-gray-100">Chats</Link></li>
             <li><Link to="/profile" className="text-gray-300 hover:text-gray-100">Profile</Link></li>
-            <li><Link to="/deal" className="text-gray-300 hover:text-gray-100">Deals</Link></li>
-            <li><Link to="#" className="text-gray-300 hover:text-gray-100">About</Link></li>
+            <li><Link to="#" className="text-gray-300 hover:text-gray-100">Chats</Link></li>
+            <li><Link to="/myitem" className="text-gray-300 hover:text-gray-100">My Listings</Link></li>
+            <li><Link to="/orders" className="text-gray-300 hover:text-gray-100">Order History</Link></li>
           </ul>
         </div>
 
@@ -57,7 +57,7 @@ const Footer = () => {
       </div>
 
       <div className="flex justify-center items-center py-4 mt-8 border-t border-gray-300">
-        <p className="text-gray-600 text-center">© 2024 Company, Inc. All rights reserved.</p>
+        <p className="text-gray-100 text-center">© 2024 Company, Inc. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Animation from "../Components/Animation";
-import Hero from "../Components/Hero";
+import Animation from "./Animation";
+import Hero from "./Hero";
 
 const Home = () => {
   const [loadingComplete, setLoadingComplete] = useState(false);

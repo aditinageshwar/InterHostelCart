@@ -27,7 +27,7 @@ const User = {
       throw err;
     }
   },
-
+  
   findById: async (userId) => {
     const sqlSelect = "SELECT * FROM usertable WHERE userid = ?";
     try {

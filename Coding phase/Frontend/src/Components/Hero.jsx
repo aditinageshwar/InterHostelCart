@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Carousel from "./Carousel";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
@@ -111,12 +111,27 @@ useEffect(() => {
     navigate(`/item/${itemNO}`);
   };
 
+  const handleSearchKey = async (e) => {
+    if (e.key === 'Enter') {
+      let itemName = searchQuery;
+      try {
+        let endpoint = `http://localhost:3001/api/items/name/${itemName}`;
+        const response = await axios.get(endpoint);
+        setItems(response.data);
+        setSearchQuery('');
+      } 
+      catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    }
+  };
+
   return (
     <div>
       {/* Always show Hero section */}
-      <div className="w-11/12 xl:w-4/5 h-[350px] m-auto mt-8 bg-stone-200 rounded-xl">
+      <div className="w-full h-[450px] m-auto bg-gray-100">
         <div className="w-full h-full flex justify-center items-center">
-          <div className="w-11/12 xl:w-1/2 p-5 space-y-5">
+          <div className="w-11/12 xl:w-1/2 p-5 ml-4 space-y-2">
             <h1 className="text-5xl font-semibold">
               <span ref={textRef} className="inline-block">
                 {"Find the Perfect Product Online".split("").map((letter, index) => (
@@ -126,8 +141,9 @@ useEffect(() => {
                 ))}
               </span>
             </h1>
+            <p className='text-2xl text-gray-600'> "Your Hostel, Your Marketplace" </p>
             <div className="mb-4">
-              <h1 className="text-4xl font-bold text-red-500 mb-2">
+              <h1 className="text-4xl font-semibold text-cyan-600 mt-8 mb-2">
                 <span ref={placeholderRef} className="inline-block">
                   {"Search...".split("").map((letter, index) => (
                     <span key={index} className="letter inline-block">
@@ -141,8 +157,9 @@ useEffect(() => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKey}
                 placeholder="Type your search here..."
-                className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-800"
+                className="w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
               />
             </div>
           </div>
@@ -150,34 +167,33 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Conditional Product Section */}
-      <div className="w-5/6 m-auto space-y-10 mt-12">
+      {/* Product Section */}
+      <div className="w-5/6 m-auto space-y-10 mt-10 mb-20">
         <h1 className="text-4xl font-bold text-center bg-[url('https://tse2.mm.bing.net/th/id/OIP.lu34wOfmqsZNgVqOPIYrJAHaFS?pid=Api&P=0&h=180')] bg-clip-text text-transparent">Products</h1>
         {loading ? (
           <div className="text-center py-10 text-2xl font-semibold text-gray-500">Loading...</div>
         ) : error ? (
           <div className="text-center py-10 text-2xl font-semibold text-gray-500">{error}</div>
+        ) : items.length === 0 ? (
+          <h1 className="text-2xl text-center font-semibold text-rose-500">No Item Found! Try searching with different name.</h1>
         ) : (
           <div className="products grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 content-center bg-gray-100 p-8 rounded-2xl shadow-lg">
-            {items.length > 0 ? (
-              items.map(item => (
-                <div
-                  key={item.itemNO}
-                  className="product h-[350px] space-y-2 cursor-pointer rounded-xl shadow-2xl p-4 overflow-hidden transform transition duration-500 hover:scale-105"
-                  onClick={() => handleDivClick(item.itemNO)}
-                >
-                  <img
-                    className="w-full h-4/5 object-cover"
-                    loading="lazy"
-                    src={item.itemPhotoURL}
-                    alt={item.itemName}
-                  />
-                  <p className="font-semibold text-gray-600">{item.itemName}</p>
-                  <h1 className="text-xl font-semibold">₹{item.itemPrice}</h1>
-                </div>
-              ))
-            ) : (
-              <h1 className="text-2xl font-semibold text-center">No Products Found</h1>
+            {items.map(item => (
+              <div
+                key={item.itemNO}
+                className="product h-[350px] space-y-2 cursor-pointer rounded-xl shadow-2xl p-4 overflow-hidden transform transition duration-500 hover:scale-105"
+                onClick={() => handleDivClick(item.itemNO)}
+              >
+                <img
+                  className="w-full h-4/5 object-cover"
+                  loading="lazy"
+                  src={item.itemPhotoURL}
+                  alt={item.itemName}
+                />
+                <p className="font-semibold text-gray-600">{item.itemName}</p>
+                <h1 className="text-xl font-semibold">₹{item.itemPrice}</h1>
+              </div>
+              )
             )}
           </div>
         )}

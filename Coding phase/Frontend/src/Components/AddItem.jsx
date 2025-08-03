@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { storage } from '../Firebase/setup'; 
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+// import { storage } from '../Firebase/setup'; 
+// import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Cookies from 'js-cookie';
 
 const AddItem = () => {

@@ -18,7 +18,6 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const auctionRoutes = require('./routes/auctionRoutes');
-const hostelRoutes = require('./routes/hostelRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 // Ensure 'uploads' folder exists
@@ -55,7 +54,6 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api', uploadRoutes);
-// app.use('/api/hostel',hostelRoutes);
 app.use('/api/auctions', auctionRoutes(io)); 
 
 app.get('/', (req, res) => {

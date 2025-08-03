@@ -23,15 +23,15 @@ const Item = {
     return rows;
   },
 
-  getByHostel: async (hostelNo) => {
-    const sql = "SELECT  i.itemNO, i.itemName, i.itemDescription, i.itemPrice, i.itemTags, i.itemVisit, i.itemPhotoURL FROM item i JOIN usertable u ON i.sellerId = u.userID WHERE u.hostelNo = ?";
-    const [rows] = await pool.query(sql, [parseInt(hostelNo, 10)]);
+  getByName: async (itemName) => {
+    const sql = "SELECT * FROM item WHERE itemName LIKE ?";
+    const [rows] = await pool.query(sql, [`%${itemName.toLowerCase()}%`]);
     return rows;
   },
 
-  getByGenderAndSeller: async (gender, sellerID) => {
-    const sql = "SELECT * FROM item WHERE gender = ? AND sellerID = ?";
-    const [rows] = await pool.query(sql, [gender, sellerID]);
+  getByHostel: async (hostelNo) => {
+    const sql = "SELECT  i.itemNO, i.itemName, i.itemDescription, i.itemPrice, i.itemTags, i.itemVisit, i.itemPhotoURL FROM item i JOIN usertable u ON i.sellerId = u.userID WHERE u.hostelNo = ?";
+    const [rows] = await pool.query(sql, [parseInt(hostelNo, 10)]);
     return rows;
   },
 
