@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const { verifyReport } = require('../controllers/itemController');
 
 const Item = {
   getAll: async () => {
@@ -59,7 +60,12 @@ const Item = {
   removeById: async (itemNO) => {
     const [result] = await pool.query("DELETE FROM item WHERE itemNO = ?", [itemNO]);
     return result;
-  }
+  },
+
+  markSafe: async (itemNO) => {
+     await pool.query("UPDATE item SET reportflag = false WHERE itemNO = ?", [itemNO]);
+     return { message: 'Item verified successfully' };
+  } 
 };
 
 module.exports = Item;

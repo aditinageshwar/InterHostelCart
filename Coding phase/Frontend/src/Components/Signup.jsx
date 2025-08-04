@@ -92,7 +92,8 @@ const Signup = () => {
                       onChange={handleChange}
                       value={formData[name]}
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a78059] transition duration-300"
+                       style={{ color: formData["userdob"] ? "black" : "#9CA3AF" }}
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-700 transition duration-300"
                     />
                   </div>
                 ))}
@@ -108,7 +109,7 @@ const Signup = () => {
                 </button>
               </form>
               <div className="mt-8 text-center">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-500">
                   Already have an account?
                   <Link to="/login" className="ml-2 text-cyan-500 hover:underline focus:outline-none font-semibold">
                     Log In

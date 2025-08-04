@@ -62,7 +62,7 @@ const Login = () => {
                     onChange={handleChange}
                     value={formData.email}
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a78059] transition duration-300"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-700 transition duration-300"
                   />
                 </div>
                 <div className="relative">
@@ -74,7 +74,7 @@ const Login = () => {
                     onChange={handleChange}
                     value={formData.password}
                     required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#a78059] transition duration-300"
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-700 transition duration-300"
                   />
                 </div>
                 <button

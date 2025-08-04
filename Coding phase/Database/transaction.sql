@@ -26,3 +26,10 @@ CREATE TABLE IF NOT EXISTS transaction (
 -- (20, 2, 3, 650, STR_TO_DATE('24/12/17', '%y/%m/%d'), TRUE);
 
 SELECT * FROM transaction;
+
+-- ALTER TABLE auctions DROP FOREIGN KEY transaction_ibfk_1;
+
+-- ALTER TABLE transaction ADD CONSTRAINT fk_transaction_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

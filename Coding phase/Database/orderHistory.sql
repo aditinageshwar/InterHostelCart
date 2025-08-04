@@ -19,3 +19,10 @@ CREATE TABLE IF NOT EXISTS orderHistory (
 SELECT * FROM orderHistory;
 
 -- ALTER TABLE orderhistory ADD COLUMN totalamount DECIMAL(10,2);
+
+-- ALTER TABLE auctions DROP FOREIGN KEY orderhistory_ibfk_3;
+
+-- ALTER TABLE orderHistory ADD CONSTRAINT fk_order_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

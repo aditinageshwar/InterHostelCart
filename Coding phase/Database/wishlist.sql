@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS wishlist (
 -- (24, 1);
 
 SELECT * FROM wishlist;
+
+-- ALTER TABLE auctions DROP FOREIGN KEY wishlist_ibfk_2;
+
+-- ALTER TABLE wishlist ADD CONSTRAINT fk_wishlist_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

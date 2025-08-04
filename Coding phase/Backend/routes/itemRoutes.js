@@ -12,5 +12,6 @@ router.get('/:tag',itemController.getItemsByTag);
 router.put('/item/:id', itemController.removeItem);
 router.get('/item/:id',itemController.getItemById);
 router.post('/report',authenticateToken, itemController.reportItem);
+router.post('/markSafe/:id', itemController.markSafe);
 
 module.exports = router;

@@ -16,3 +16,10 @@ CREATE TABLE IF NOT EXISTS soldHistory (
 -- 	('abdc123xyz',13,4,130,'2024-05-15');
 
 SELECT * FROM soldHistory;  
+
+-- ALTER TABLE auctions DROP FOREIGN KEY soldhistory_ibfk_2;
+
+-- ALTER TABLE soldHistory ADD CONSTRAINT fk_sold_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

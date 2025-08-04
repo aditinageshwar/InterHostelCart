@@ -38,6 +38,10 @@ login: async (req, res) => {
     }
 
     const user = result[0];
+    if (user.reported) {
+      return res.status(403).json({ error: 'Your account has been blocked due to policy violation.' });
+    }
+
     const isMatch = await bcrypt.compare(userpassword, user.userPassword);
 
     if (!isMatch) {

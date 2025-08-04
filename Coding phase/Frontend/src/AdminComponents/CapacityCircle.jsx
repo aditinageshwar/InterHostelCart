@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaUser } from 'react-icons/fa'; 
 import { FaRegFileAlt } from 'react-icons/fa';
 import { FaUserSlash } from 'react-icons/fa';
@@ -18,7 +17,7 @@ const CapacityCircle = ({ capacity, maxCapacity,label }) =>
             cx="40"
             cy="40"
             r={radius}
-            className="text-gray-300"
+            className="text-white"
             strokeWidth="6"
             fill="none"
             stroke="currentColor"
@@ -28,7 +27,7 @@ const CapacityCircle = ({ capacity, maxCapacity,label }) =>
             cx="40"
             cy="40"
             r={radius}
-            className="text-silver-500" 
+            className="text-cyan-500 transition-all duration-[1500ms] ease-out" 
             strokeWidth="6"
             fill="none"
             stroke="currentColor"
@@ -39,23 +38,25 @@ const CapacityCircle = ({ capacity, maxCapacity,label }) =>
         </svg>
 
         <div className="absolute inset-0 flex items-center justify-center">
-          {label === "user" ?  
-            (<FaUser className="text-gray-300 text-3xl" />) :
-           label === "report"?  
-            (<FaRegFileAlt className="text-gray-300 text-3xl" />) :
-            (<FaUserSlash className="text-gray-300 text-3xl" />) }
+          {label === "user" ? (
+            <FaUser className="text-white text-3xl" />
+          ) : label === "report"? (
+            <FaRegFileAlt className="text-white text-3xl" />
+          ) : (
+            <FaUserSlash className="text-white text-3xl" />
+          )}
         </div>
 
         <div className="text-center mt-2">
-          {label === "user" ?
-            (<p className="text-gray-500 text-xs">Registered User</p>) :
-           label === "report"?
-            (<p className="text-gray-500 text-xs">Reports</p>) :
-            (<p className="text-gray-500 text-xs">Block User</p>) } 
-
-          <p className="text-gray-900 font-semibold text-lg">{capacity}</p>
-       </div>
-
+          {label === "user" ? (
+            <p className="font-semibold text-white">Registered User</p>
+          ) : label === "report"? (
+            <p className="font-semibold text-white">Reports</p>
+          ) : (
+            <p className="font-semibold text-white">Blocked User</p>
+          )} 
+          <p className="text-white font-semibold text-lg">{capacity}</p>
+        </div>
       </div>
     </div>
   );

@@ -1,18 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Layout from './Components/Layout'; 
-import UnifiedSection from './Components/UnifiedSection';
-import Payment from './Components/Payment'
-import Home from './Components/Home'; 
-import Orders from './Components/Orders';
 import AddItem from './Components/AddItem';
-import Profile from './Components/Profile';
-import Login from './Components/Login';
-import Signup from './Components/Signup';
-import Mycart from './Components/Mycart';
-import Item from './Components/Item';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './Components/AdminDashboard';
 import Auction from './Components/Auction';
+import Home from './Components/Home'; 
+import Item from './Components/Item';
+import Layout from './Components/Layout'; 
+import Login from './Components/Login';
+import Mycart from './Components/Mycart';
 import Myitem from './Components/Myitem';
+import Orders from './Components/Orders';
+import Payment from './Components/Payment'
+import Profile from './Components/Profile';
+import Signup from './Components/Signup';
+import UnifiedSection from './Components/UnifiedSection';
 
 function App() {
   const tagRoutes = ["electronics", "accessories", "stationary", "vehicle", "sport", "medicine"];

@@ -22,3 +22,10 @@ CREATE TABLE IF NOT EXISTS chatService (
 -- ALTER TABLE chatservice MODIFY COLUMN messageContent TEXT;
 
 -- ALTER TABLE chatservice ADD COLUMN room VARCHAR(200);
+
+-- ALTER TABLE chatService DROP FOREIGN KEY chatservice_ibfk_3;
+
+-- ALTER TABLE chatService ADD CONSTRAINT fk_chat_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

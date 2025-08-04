@@ -70,6 +70,28 @@ const User = {
       console.error("Error in getAll:", err);
       throw err;
     }
+  },
+  
+  getBlocked: async () => {
+    const sqlSelect = "SELECT * FROM usertable WHERE reported = TRUE";
+    try {
+      const [rows] = await pool.query(sqlSelect);
+      return rows;
+    } catch (err) {
+      console.error("Error in getAll:", err);
+      throw err;
+    }
+  },
+
+  reportById: async (userId) => {
+    const sqlUpdate = 'UPDATE usertable SET reported = TRUE WHERE userid = ?';
+    try {
+      const [result] = await pool.query(sqlUpdate, [userId]);
+      return result;
+    } catch (err) {
+      console.error("Error in updateProfileImage:", err);
+      throw err;
+    }
   }
 };
 

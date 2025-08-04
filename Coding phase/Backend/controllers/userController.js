@@ -52,6 +52,27 @@ const userController = {
       console.error('Error executing query:', err);
       res.status(500).json({ error: err.message });
     }
+  },
+
+  blockusers: async (req, res) => {
+    try {
+      const result = await User.getBlocked();
+      res.send(result);
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  reportUser : async (req, res) => {
+    const userId = req.params.id;
+    try {
+      await User.reportById(userId);
+      res.json({ message: 'Profile reported successfully' });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 

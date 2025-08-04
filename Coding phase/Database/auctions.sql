@@ -7,6 +7,15 @@ CREATE TABLE IF NOT EXISTS auctions (
   endTime DATETIME NOT NULL,
   
   FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );
 
 SELECT * FROM auctions;
+
+-- ALTER TABLE auctions DROP FOREIGN KEY auctions_ibfk_1;
+
+-- ALTER TABLE auctions ADD CONSTRAINT fk_auction_item
+-- FOREIGN KEY (itemNO) REFERENCES item(itemNO)
+-- ON DELETE CASCADE
+-- ON UPDATE CASCADE;

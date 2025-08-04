@@ -116,6 +116,17 @@ const itemController = {
       console.error('Error executing query:', err);
       res.status(500).json({ error: err.message });
     }
+  },
+
+   markSafe: async (req, res) => {
+    const itemNO = req.params;
+    try {
+      const result = await Item.markSafe(itemNO.id);
+      res.status(200).json(result);
+    } catch (err) {
+      console.error('Error verifying report:', err);
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
