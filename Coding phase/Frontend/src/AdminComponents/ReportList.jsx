@@ -17,10 +17,10 @@ function ReportList({ reports, onVerify, onDelete })
             </div>
             <p className="col-span-1 text-lg font-medium text-gray-700 pl-2">MRP:  ₹{report.itemPrice}</p>
             <button onClick={() => onVerify(report.itemNO)} className="col-span-1 ml-16 w-2/3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none transition duration-200">
-              Verify Report
+              Dismiss Report
             </button>
             <button onClick={() => onDelete(report.itemNO)} className="col-span-1 w-2/3 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 focus:outline-none transition duration-200">
-              Delete Item
+              Delete & Block
             </button>
           </li>
         ))}

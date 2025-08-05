@@ -3,11 +3,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
+const adminEmails = process.env.ADMIN_EMAILS;
 
 const authController = {
   signup: async (req, res) => {
     try {
       const {emailid, hostelno, roomno, username, userdob, userphoneno, userpassword, userdept, usercourse} = req.body;
+      // if (!emailid.endsWith('@stu.manit.ac.in')) {
+      //   return res.status(403).json({ error: 'Access denied: Invalid email domain' });
+      // }
+ 
       const hashedPassword = await bcrypt.hash(userpassword, 10);
 
       await User.create(emailid, hostelno, roomno, username, userdob, userphoneno, hashedPassword, userdept, usercourse);
@@ -30,6 +35,7 @@ const authController = {
 
 login: async (req, res) => {
   const { emailid, userpassword } = req.body;
+
   try {
     const result = await User.findByEmail(emailid);
 
@@ -48,8 +54,9 @@ login: async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
-    const token = jwt.sign({ userId: user.userID, admin: user.admin || false }, secretKey, { expiresIn: '1h' });
-    res.status(200).json({ token, admin: user.admin || false });
+    const isAdmin = adminEmails.includes(user.emailID);
+    const token = jwt.sign({ userId: user.userID, admin: isAdmin || false }, secretKey, { expiresIn: '1h' });
+    res.status(200).json({ token, admin: isAdmin || false });
   } 
   catch (err) {
     console.error("Login error:", err);

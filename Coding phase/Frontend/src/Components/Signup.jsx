@@ -4,6 +4,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import img from "../assets/login.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import { auth } from '../Firebase/setup.js'; 
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -36,16 +38,39 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const formattedData = {
-        ...formData,
-        userdob: formatDate(formData.userdob)
-      };
+      const provider = new GoogleAuthProvider();
+      console.log(provider);
+      provider.setCustomParameters({ hd: 'stu.manit.ac.in',  prompt: 'select_account' });
 
-      const response = await axios.post("http://localhost:3001/api/auth/signup", formattedData);
-      const { token } = response.data;
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+      const user = result.user;
+      const email = user.email;
+      const token1 = await user.getIdToken();
 
-      Cookies.set("token", token, { expires: 1 });
-      navigate("/");
+      // Double check domain even after Google sign-in
+      if (!email.endsWith('@stu.manit.ac.in')) {
+        await firebase.auth().signOut();
+        alert("Only MANIT student emails are allowed.");
+        return;
+      }
+
+
+      // const formattedData = {
+      //   ...formData,
+      //   userdob: formatDate(formData.userdob)
+      // };
+
+      // // const isCollegeEmail = formData.emailid.endsWith('@stu.manit.ac.in');
+      // // if (!isCollegeEmail) {
+      // //   return alert('Please use your college emailID.');
+      // // }
+
+      // const response = await axios.post("http://localhost:3001/api/auth/signup", formattedData);
+      // const { token } = response.data;
+
+      // Cookies.set("token", token, { expires: 1 });
+      // navigate("/");
     } 
     catch (err) {
       const message = err.response?.data?.message || err.response?.data?.sqlMessage;
