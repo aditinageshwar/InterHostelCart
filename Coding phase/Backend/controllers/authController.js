@@ -9,27 +9,16 @@ const authController = {
   signup: async (req, res) => {
     try {
       const {emailid, hostelno, roomno, username, userdob, userphoneno, userpassword, userdept, usercourse} = req.body;
-      // if (!emailid.endsWith('@stu.manit.ac.in')) {
-      //   return res.status(403).json({ error: 'Access denied: Invalid email domain' });
-      // }
- 
       const hashedPassword = await bcrypt.hash(userpassword, 10);
 
       await User.create(emailid, hostelno, roomno, username, userdob, userphoneno, hashedPassword, userdept, usercourse);
       res.status(201).json({ message: 'User registered successfully' });
     } 
     catch (error) {
-      console.error('Signup error:', error);
-      if (error.code === 'ER_DUP_ENTRY' && error.sqlMessage.includes('emailid')) {
-        return res.status(400).json({
-          message: 'This email is already registered. Try logging in.'
-        });
+      if (error.code === 'ER_DUP_ENTRY' && error.sqlMessage.includes('emailID')) {
+        return res.status(400).json({message: 'This email is already registered. Try logging in.'});
       }
-
-      res.status(500).json({
-        message: 'Internal server error',
-        error: error.message
-      });
+      res.status(500).json({message: 'Internal server error', error: error.message});
     }
   },
 

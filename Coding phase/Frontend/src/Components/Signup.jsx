@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {FaEnvelope, FaLock, FaUser, FaPhone, FaBuilding, FaCalendarAlt, FaBook} from "react-icons/fa";
+import {FaLock, FaUser, FaPhone, FaBuilding, FaCalendarAlt, FaBook} from "react-icons/fa";
+import { MdMeetingRoom } from "react-icons/md";
 import axios from "axios";
 import Cookies from "js-cookie";
 import img from "../assets/login.jpg";
@@ -39,47 +40,40 @@ const Signup = () => {
 
     try {
       const provider = new GoogleAuthProvider();
-      console.log(provider);
       provider.setCustomParameters({ hd: 'stu.manit.ac.in',  prompt: 'select_account' });
 
+      await signOut(auth);
       const result = await signInWithPopup(auth, provider);
       console.log(result);
+     
       const user = result.user;
       const email = user.email;
-      const token1 = await user.getIdToken();
+      console.log(email); 
 
-      // Double check domain even after Google sign-in
-      if (!email.endsWith('@stu.manit.ac.in')) {
-        await firebase.auth().signOut();
+      if (!email.endsWith('@stu.manit.ac.in')) {                            //double check
+        await signOut(auth);
         alert("Only MANIT student emails are allowed.");
         return;
       }
+      if(window.opener) {
+        window.close(); 
+      }
+       
+      const formattedData = {
+        ...formData,
+        emailid: email,
+        userdob: formatDate(formData.userdob)
+      };
+   
+      const response = await axios.post("http://localhost:3001/api/auth/signup", formattedData);
+      const { token } = response.data;
 
-
-      // const formattedData = {
-      //   ...formData,
-      //   userdob: formatDate(formData.userdob)
-      // };
-
-      // // const isCollegeEmail = formData.emailid.endsWith('@stu.manit.ac.in');
-      // // if (!isCollegeEmail) {
-      // //   return alert('Please use your college emailID.');
-      // // }
-
-      // const response = await axios.post("http://localhost:3001/api/auth/signup", formattedData);
-      // const { token } = response.data;
-
-      // Cookies.set("token", token, { expires: 1 });
-      // navigate("/");
+      Cookies.set("token", token, { expires: 1 });
+      navigate("/");
     } 
     catch (err) {
-      const message = err.response?.data?.message || err.response?.data?.sqlMessage;
-
-      if (message?.includes("Duplicate entry") && message.includes("emailid")) {
-        setError("This email is already registered. Try logging in instead.");
-      } else {
-        setError("Signup failed: " + (message || "Unknown error"));
-      }
+      const message = err.response?.data?.message;
+      setError(message);
     } 
     finally {
       setLoading(false);
@@ -98,18 +92,17 @@ const Signup = () => {
               {error && <p className="text-red-500 mb-4">{error}</p>}
               <form onSubmit={handleSubmit} className="space-y-6">
                 {[
-                  { icon: FaEnvelope, name: "emailid", type: "email", placeholder: "Email" },
-                  { icon: FaBuilding, name: "hostelno", type: "text", placeholder: "Hostel Number" },
-                  { icon: FaBuilding, name: "roomno", type: "text", placeholder: "Room Number" },
                   { icon: FaUser, name: "username", type: "text", placeholder: "Username" },
-                  { icon: FaCalendarAlt, name: "userdob", type: "date", placeholder: "Date of Birth" },
                   { icon: FaPhone, name: "userphoneno", type: "text", placeholder: "Phone Number" },
-                  { icon: FaLock, name: "userpassword", type: "password", placeholder: "Password" },
+                  { icon: FaCalendarAlt, name: "userdob", type: "date", placeholder: "Date of Birth" },
+                  { icon: FaBuilding, name: "hostelno", type: "text", placeholder: "Hostel Number" },
+                  { icon: MdMeetingRoom, name: "roomno", type: "text", placeholder: "Room Number" },
                   { icon: FaBook, name: "userdept", type: "text", placeholder: "Department" },
-                  { icon: FaBook, name: "usercourse", type: "text", placeholder: "Course" }
+                  { icon: FaBook, name: "usercourse", type: "text", placeholder: "Course" },
+                  { icon: FaLock, name: "userpassword", type: "password", placeholder: "Password" },
                 ].map(({ icon: Icon, name, type, placeholder }) => (
                   <div className="relative" key={name}>
-                    <Icon className="absolute top-3 left-3 text-gray-400" />
+                    <Icon className="absolute top-4 left-3 text-gray-400" />
                     <input
                       type={type}
                       name={name}
@@ -117,7 +110,7 @@ const Signup = () => {
                       onChange={handleChange}
                       value={formData[name]}
                       required
-                       style={{ color: formData["userdob"] ? "black" : "#9CA3AF" }}
+                      style={{ color: formData["userdob"] ? "black" : "#9CA3AF" }}
                       className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-cyan-700 transition duration-300"
                     />
                   </div>

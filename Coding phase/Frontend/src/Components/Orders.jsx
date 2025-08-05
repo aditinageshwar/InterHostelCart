@@ -174,7 +174,6 @@ const Orders = () => {
         const buyerOrders = response2?.data || [];
         const combinedOrders = [...sellerOrders.map(order => ({ ...order })), ...buyerOrders.map(order => ({ ...order }))];
         setOrders(combinedOrders);
-        console.log(combinedOrders);
         setLoading(false);
       } 
       catch (error) {
