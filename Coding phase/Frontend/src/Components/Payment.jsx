@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AiOutlineCreditCard } from 'react-icons/ai';
 import { SiGooglepay, SiPhonepe } from 'react-icons/si';
 import { RiPaypalLine } from 'react-icons/ri';
 
 const Payment = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { bidAmount } = location.state || {};
   const [activePaymentMethod, setActivePaymentMethod] = useState(null);
-  const [otp, setOtp] = useState('');
   const [saveDetails, setSaveDetails] = useState(false);
-
-  // Handle OTP submission
-  const handleOtpSubmit = (e) => {
-    e.preventDefault();
-    alert('OTP submitted: ' + otp);
+ 
+  const handlePayment = () => {
+    alert('Payment successful!');
+    navigate('/orders');
   };
 
   return (
@@ -47,13 +49,14 @@ const Payment = () => {
           <h3 className="text-lg font-semibold mb-2">UPI Payment</h3>
           <p className="mb-4">Select your UPI app and enter your UPI ID.</p>
           <input type="text" placeholder="UPI ID" className="w-full px-4 py-2 border rounded-lg mb-4" />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Save UPI ID</button>
+          <button className="bg-sky-600 text-white px-4 py-2 rounded-lg">Save UPI ID</button>
           <div className="mt-4">
             <label className="inline-flex items-center">
               <input type="checkbox" checked={saveDetails} onChange={() => setSaveDetails(!saveDetails)} className="form-checkbox" />
               <span className="ml-2">Save details for future use</span>
             </label>
           </div>
+          <button onClick={handlePayment} className="bg-green-700 text-white px-5 py-2 rounded-md mt-4">Pay :  ₹{Number(bidAmount)}</button>
         </div>
       )}
 
@@ -61,20 +64,20 @@ const Payment = () => {
         <div className="p-4 bg-gray-100 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">Razorpay</h3>
           <p className="mb-4">To integrate Razorpay, you'll need to follow their documentation for the setup.</p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Save Razorpay Account</button>
+          <button className="bg-sky-600 text-white px-4 py-2 rounded-lg">Save Razorpay Account</button>
           <div className="mt-4">
             <label className="inline-flex items-center">
               <input type="checkbox" checked={saveDetails} onChange={() => setSaveDetails(!saveDetails)} className="form-checkbox" />
               <span className="ml-2">Save details for future use</span>
             </label>
           </div>
+          <button onClick={handlePayment} className="bg-green-700 text-white px-5 py-2 rounded-md mt-4">Pay :  ₹{Number(bidAmount)}</button>
         </div>
       )}
 
       {activePaymentMethod === 'cards' && (
         <div className="p-4 bg-gray-100 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">Card Details</h3>
-          <form onSubmit={handleOtpSubmit}>
             <div className="mb-4">
               <label className="block text-sm mb-1">Card Number</label>
               <input type="text" placeholder="Enter card number" className="w-full px-4 py-2 border rounded-lg" />
@@ -91,18 +94,13 @@ const Payment = () => {
               <label className="block text-sm mb-1">Account Holder Name</label>
               <input type="text" placeholder="Enter your name" className="w-full px-4 py-2 border rounded-lg" />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm mb-1">OTP Verification</label>
-              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="Enter OTP" className="w-full px-4 py-2 border rounded-lg" />
-            </div>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">Verify OTP</button>
             <div className="mt-4">
               <label className="inline-flex items-center">
                 <input type="checkbox" checked={saveDetails} onChange={() => setSaveDetails(!saveDetails)} className="form-checkbox" />
                 <span className="ml-2">Save details for future use</span>
               </label>
             </div>
-          </form>
+            <button onClick={handlePayment} className="bg-green-700 text-white px-5 py-2 rounded-md mt-4">Pay :  ₹{Number(bidAmount)}</button>
         </div>
       )}
     </div>

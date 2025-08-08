@@ -2,8 +2,10 @@ import { useState } from "react";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {jwtDecode} from 'jwt-decode';
 import img from "../assets/login.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import { socket } from './Socket';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -30,6 +32,9 @@ const Login = () => {
       const { token, admin } = response.data;
 
       Cookies.set("token", token, { expires: 1 }); 
+      
+      const decoded = jwtDecode(token);
+      socket.emit('registerUser', decoded.userId); 
 
       navigate(admin ? "/admin" : "/");
     } 

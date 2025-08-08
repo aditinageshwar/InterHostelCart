@@ -73,7 +73,24 @@ const userController = {
       console.error('Error executing query:', err);
       res.status(500).json({ error: err.message });
     }
-  }
+  },
+
+  getByID: async (req, res) => {
+    const { userid } = req.params;
+
+    try {
+      const userResult = await User.findById(userid);
+
+      if (!userResult || userResult.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json({ user: userResult[0] });
+    } catch (err) {
+      console.error('Error executing query:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
 };
 
 module.exports = userController;

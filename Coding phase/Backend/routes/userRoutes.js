@@ -9,4 +9,5 @@ router.post('/profile/image', authenticateToken, userController.uploadProfileIma
 router.get('/alluser', userController.getusers);
 router.get('/blockuser', userController.blockusers);
 router.put('/report/:id', userController.reportUser);
+router.get('/username/:userid', userController.getByID);
 module.exports = router;

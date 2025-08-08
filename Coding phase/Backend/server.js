@@ -60,22 +60,32 @@ app.get('/', (req, res) => {
   res.send('From backend');
 });
 
-// WebSocket connection
+const userSocketMap = {};
+
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
+  socket.on('registerUser', (userId) => {
+    userSocketMap[userId] = socket.id;
+    socket.userId = userId;
+  });
+
+  socket.on('chatRequest', ({ itemNO, senderId, receiverId}) => {
+    const receiverSocketId = userSocketMap[receiverId];
+    io.to(receiverSocketId).emit('incomingChatRequest', {itemNO, senderId, receiverId, message: 'Someone wants to chat with you!'});
+  });
+
   socket.on('joinRoom', (room) => {
     socket.join(room);
-    console.log(`User ${socket.id} joined room ${room}`);
   });
 
-  socket.on('sendMessage', (message) => {
-    io.to(message.room).emit('receiveMessage', message);
+  socket.on('sendMessage', (newMessage) => {
+    socket.to(newMessage.room).emit('receiveMessage', newMessage);
   });
-
-  socket.on('joinAuction', (auctionId) => {
-    socket.join(auctionId);
-    console.log(`User ${socket.id} joined auction ${auctionId}`);
+  
+  socket.on('auctionEnded', ({ winnerId, bidAmount }) => {
+    const receiverSocketId = userSocketMap[winnerId];
+    io.to(receiverSocketId).emit('auctionWin', {bidAmount, message: `🎉 Congratulations! You won the auction with a bid of ₹${bidAmount}`});
   });
 
   socket.on('disconnect', () => {

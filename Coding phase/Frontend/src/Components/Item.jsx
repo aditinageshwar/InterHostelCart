@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComments, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { socket } from './Socket';
 
 const Item = () => {
+  let navigate = useNavigate();
   const [item, setItem] = useState({});
   const [userid, setUserid] = useState('');
   const { itemNO } = useParams();
@@ -48,7 +51,9 @@ const Item = () => {
   }, [itemNO]);
 
   const handleChatClick = () => {
-    alert('Chat with user say: hii');
+    alert('Chat with user say: Hii');
+    socket.emit('chatRequest', {itemNO: itemNO, senderId: userid, receiverId: item.userID });
+    navigate('/chat', {state: { itemNO: itemNO, senderId: userid, receiverId: item.userID }});
   };
 
   const handleReportClick = async () => { 

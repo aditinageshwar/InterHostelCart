@@ -101,6 +101,13 @@ const Navbar = () =>
                 </NavLink>
                </li>
                <li>
+                <NavLink to="/chatDashboard"
+                  className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
+                  onClick={() => setShowMenu(false)}>
+                  Chats
+                </NavLink>
+               </li>
+               <li>
                 <NavLink to="/payment"
                   className="block py-2 px-4 hover:bg-cyan-600 hover:text-white hover:rounded-md"
                   onClick={() => setShowMenu(false)}>

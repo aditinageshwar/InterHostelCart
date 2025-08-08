@@ -10,7 +10,7 @@ const Footer = () => {
           <ul className="space-y-2">
             <li><Link to="/" className="text-gray-300 hover:text-gray-100">Home</Link></li>
             <li><Link to="/profile" className="text-gray-300 hover:text-gray-100">Profile</Link></li>
-            <li><Link to="#" className="text-gray-300 hover:text-gray-100">Chats</Link></li>
+            <li><Link to="/chatDashboard" className="text-gray-300 hover:text-gray-100">Chats</Link></li>
             <li><Link to="/myitem" className="text-gray-300 hover:text-gray-100">My Listings</Link></li>
             <li><Link to="/orders" className="text-gray-300 hover:text-gray-100">Order History</Link></li>
           </ul>

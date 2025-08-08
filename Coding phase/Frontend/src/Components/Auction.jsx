@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import io from 'socket.io-client';
-const socket = io('http://localhost:3001'); 
+import { socket } from './Socket';
 
 const Auction = () => {
   const location = useLocation();
@@ -46,7 +45,6 @@ const Auction = () => {
         const auctionId = response.data.auctionId;
         fetchAuction(auctionId);
         fetchBids(auctionId);
-        socket.emit('joinAuction', auctionId);
       } 
       catch (error) 
       {
@@ -71,7 +69,6 @@ const Auction = () => {
         );
         setAuction(response.data.auction);
         fetchBids(response.data.auction.auctionId);
-        socket.emit('joinAuction', response.data.auction.auctionId);
       } 
       catch (error) {
         console.error('Error creating auction:', error);
@@ -125,22 +122,6 @@ const Auction = () => {
       fetchAuctionId();
       checkIfSeller();
     }
-
-    socket.on('newBid', (bid) => {
-      setBids((prevBids) => [bid, ...prevBids]);
-    });
-
-    socket.on('auctionEnded', (data) => {
-      if (data.winnerId !== userid) {
-        alert('The auction has ended.');
-        navigate('/');
-      }
-    });
-
-    return () => {
-      socket.off('newBid');
-      socket.off('auctionEnded');
-    };
   }, [itemNO, token, userid, navigate]);
   
   const handleBid = async () => {
@@ -184,13 +165,9 @@ const Auction = () => {
       {
         const confirmSale = window.confirm(`Highest bid is ₹${highestBid.bidAmount}. Do you want to sell the item to this bidder?`);
         if (confirmSale) {
-          if (highestBid.buyerId === userid) {
-            alert(`Congratulations! You won the auction with a bid of ₹${highestBid.bidAmount}`);
-            navigate('/orders');
-          } else {
-            socket.emit('auctionEnded', { winnerId: highestBid.buyerId });
-          }
-          alert('Auction stopped. Item sold to highest bidder.');
+          await axios.put(`http://localhost:3001/api/items/item/${itemNO}`);
+          socket.emit('auctionEnded', { winnerId: highestBid.buyerId, bidAmount: highestBid.bidAmount });
+          navigate('/orders'); 
         }
         else {
           alert('Auction stopped. No sale was made.');
@@ -203,7 +180,7 @@ const Auction = () => {
     }
   };
 
-  // Aution automatically ends after endTime
+  //Aution automatically ends after endTime
   useEffect(() => {
     const checkAuctionEnd = async () => {
       if (auction.endTime && new Date(auction.endTime) < new Date()) 
