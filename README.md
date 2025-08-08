@@ -1,35 +1,34 @@
-# Inter_HostelCart
-Title: Inter-Hostel Cart: Fostering Community and Convenience through Hostel-wide Commerce
-
-Tech Stack:
-
+# Inter Hostel Cart
+<h3>Tech Stack:</h3>
   - Frontend: HTML, CSS (Bootstrap + Tailwind),Javascript, React.js.
   - Backend: Node.js, Express.js, MySQL.
+  - Socket.io
 
-Description:
-Inter-Hostel Cart is a visionary project aimed at creating a dynamic marketplace within university hostels, facilitating seamless transactions between students residing within the same accommodation. The platform serves as a centralized hub where hostel dwellers can buy and sell various products, fostering a sense of community and enhancing convenience for all users.
+<h2>Description:</h2>
+Inter-Hostel Cart is a visionary project aimed at creating a dynamic marketplace within MANIT hostels, facilitating seamless transactions between students residing within the same accommodation. The platform serves as a centralized hub where hostel dwellers can buy and sell various products, fostering a sense of community and enhancing convenience for all users.
 
-Key Features:
-1. **User Connectivity**: Inter-Hostel Cart connects students residing in the same hostel, enabling them to interact, engage, and trade with one another effortlessly.
+<h2>🚀 Key Features: </h2>
+1. **User Connectivity**: Inter-Hostel Cart connects students residing in the hostels of MANIT, enabling them to interact, engage, and trade with one another effortlessly.
 
 2. **Product Listing**: Users can list items they want to sell, including textbooks, electronics, clothing, and more. Each listing can include details such as price, description, and images for clear representation.
 
-3. **Search and Filter**: The platform offers robust search and filter functionalities, allowing users to easily find products of interest based on categories, prices, or keywords.
+3. **Search and Filter**: The platform offers robust search and filter functionalities, allowing users to easily find products of interest based on categories, hostels, or keywords.
 
 4. **Secure Transactions**: Inter-Hostel Cart ensures secure transactions through built-in payment gateways or designated payment methods, guaranteeing peace of mind for both buyers and sellers.
 
 5. **Community Engagement**: Beyond commerce, the platform promotes community engagement by facilitating communication channels such as chat features or forums, enabling users to discuss products, share recommendations, and build relationships.
 
-6. **Feedback and Ratings**: Users can provide feedback and ratings based on their transaction experiences, fostering transparency and trust within the hostel community.
+6. **Interactive Cart System**: Allows users to manage their selected items before proceeding to payment. It includes dynamic item rendering, real-time total calculation.
 
-7. **Administrative Tools**: Admin features enable hostel management or designated moderators to oversee the platform, ensure compliance with guidelines, and address any issues promptly.
+7. **Administrative Tools**: A responsive admin dashboard that allows system moderators to view all registered users, items, item-related reports, and blocked accounts, with the ability to verify and take action on reported content.
 
-8. **Auction and Bidding**: Sellers can host timed auctions; buyers place bids to win items.
+8. **Auction and Bidding**: Sellers can host timed auctions and buyers place bids to win items.
 
-Benefits:
+9. **Order Records**: Tracks completed orders while preserving item details and buyer/seller information for reliable historical records.
+
+<h2>✅ Benefits:</h2>
 - **Convenience**: Students can conveniently buy and sell items without leaving their hostel, saving time and effort.
-- **Community Building**: Inter-Hostel Cart fosters a sense of belonging and community spirit by facilitating interactions and transactions among hostel residents.
 - **Financial Support**: The platform provides students with an additional avenue to earn money by selling unused or unwanted items.
 - **Environmental Impact**: Encouraging reuse and recycling of goods reduces waste and promotes sustainability within the hostel environment.
 
-Inter-Hostel Cart revolutionizes the way students engage in commerce within their living spaces, transforming hostels into vibrant hubs of connectivity, collaboration, and convenience.
+**Email** : aditinageshwar7@gmail.com
